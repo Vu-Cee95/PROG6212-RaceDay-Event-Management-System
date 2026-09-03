@@ -30,6 +30,7 @@ RaceDay is a full-stack web-based event management system designed specifically 
 ## CI/CD
 The GitHub Actions workflow (`.github/workflows/part1-ci.yml`) validates that the `/docs` folder and all required Part 1 files exist.
 [<img width="1352" height="681" alt="workflow" src="https://github.com/user-attachments/assets/2ea947f3-9f9c-4520-b4a3-e57dceebdad6" />]
+![Green Build Screenshot](workflow.png)
 
 ## Video Demonstration
 YouTube Link: [ADD YOUR UNLISTED YOUTUBE LINK HERE]
