@@ -1,84 +1,35 @@
-\# RaceDay Event Management System
+# RaceDay Event Management System
 
+## Project Description
+RaceDay is a full-stack web-based event management system designed specifically for the South African road running, walking, and cycling community.
 
+## User Roles
 
-South African road running, walking, and cycling event management platform.
+### Organiser
+- Create, edit, and delete events.
+- Manage event categories.
+- View event enrolments.
+- Capture participant results.
 
+### Participant
+- Create an account and log in.
+- Browse available events.
+- Enter an event and select a category.
+- View their own enrolments and results.
 
+## Part 1 Deliverables
+- ERD: `/docs/RaceDay_ERD.pdf`
+- API Endpoint Plan: `/docs/RaceDay_API_Endpoint_Plan.pdf`
+- SQL Database Script: `/docs/RaceDay_Database.sql`
 
-\## Project Status
+## Database Setup
+1. Open SQL Server Management Studio (SSMS).
+2. Open the file `docs/RaceDay_Database.sql`.
+3. Execute the script (F5). It will create the `RaceDay` database, all tables, constraints, and seed data.
 
-Part 1 - System Planning and Database
+## CI/CD
+The GitHub Actions workflow (`.github/workflows/part1-ci.yml`) validates that the `/docs` folder and all required Part 1 files exist.
+[<img width="1352" height="681" alt="workflow" src="https://github.com/user-attachments/assets/2ea947f3-9f9c-4520-b4a3-e57dceebdad6" />]
 
-
-
-\## User Roles
-
-
-
-\### Organiser
-
-\- Create, edit and delete events
-
-\- Manage event categories
-
-\- View event enrolments
-
-\- Capture participant results
-
-
-
-\### Participant
-
-\- Create an account and log in
-
-\- Browse available events
-
-\- Enter an event and select a category
-
-\- View their own enrolments
-
-\- Track their own race results and performance history
-
-
-
-\## Repository Structure
-
-\- `/docs` - Contains all planning documents (ERD, API plan, SQL script)
-
-\- `/.github/workflows` - Contains CI/CD pipeline configuration
-
-
-
-\## Part 1 Deliverables
-
-\- Entity Relationship Diagram (ERD)
-
-\- API Endpoint Plan
-
-\- SQL Database Script
-
-\- GitHub repository with CI/CD
-
-
-
-\## CI/CD Status
-
-!\[CI/CD](https://github.com/Vu-Cee95/PROG6212-RaceDay-Event-Management-System-Part1/actions/workflows/part1-ci.yml/badge.svg)
-
-
-
-\## Video Demonstration
-
-\[YouTube Link - To be added]
-
-
-
-\## Database Setup
-
-1\. Open SQL Server Management Studio (SSMS)
-
-2\. Run the script: `docs/RaceDay\_Database.sql`
-
-3\. The script will create all tables and seed data
-
+## Video Demonstration
+YouTube Link: [ADD YOUR UNLISTED YOUTUBE LINK HERE]
