@@ -66,3 +66,8 @@ It validates the repository structure by checking that:
 - The SQL script exists.
 - The README exists.
 This ensures that all required Part 1 deliverables are present before submission.
+
+## Known Issues and Limitations
+- The database script currently seeds with basic sample data. Advanced data validation is pending for Part 2.
+- The API endpoint plan is a planning document and has not yet been implemented in code.
+- The CI workflow checks for file existence but does not yet build an application (as Part 1 is planning only).
