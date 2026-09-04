@@ -44,3 +44,9 @@ The repository is structured as follows:
   - `RaceDay_Database.sql`
 - `.github/workflows/` - Contains the CI/CD validation workflow
 - `README.md` - Project documentation
+
+## Technologies Used
+- SQL Server Management Studio (SSMS) - Database design and scripting
+- Draw.io - Entity Relationship Diagram
+- GitHub Actions - CI/CD validation
+- Markdown - Documentation
