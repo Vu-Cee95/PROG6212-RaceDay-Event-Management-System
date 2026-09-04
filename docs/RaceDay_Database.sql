@@ -71,3 +71,17 @@ CREATE TABLE Results (
     Notes NVARCHAR(255) NULL
 );
 GO
+
+-- =============================================
+-- Seed Data (Realistic Sample Data)
+-- =============================================
+
+-- Event Types
+INSERT INTO EventTypes (TypeName) VALUES ('Run'), ('Walk'), ('Cycle');
+
+-- Users (2 Organisers, 2 Participants)
+INSERT INTO Users (Email, PasswordHash, FullName, Role) VALUES 
+('thabo.mokoena@raceday.co.za', 'Hash123!', 'Thabo Mokoena', 'Organiser'),
+('sarah.vandermerwe@raceday.co.za', 'Hash123!', 'Sarah van der Merwe', 'Organiser'),
+('lwando.dlamini@gmail.com', 'Hash123!', 'Lwando Dlamini', 'Participant'),
+('priya.naidoo@gmail.com', 'Hash123!', 'Priya Naidoo', 'Participant');
