@@ -113,3 +113,10 @@ INSERT INTO Results (EnrolmentId, FinishTime, FinishingPosition, Notes) VALUES
 (1, '03:45:22', 120, 'Personal Best'),
 (3, '00:28:45', 45, NULL);
 GO
+
+-- Show seeded data
+SELECT * FROM Users;
+SELECT * FROM Events;
+SELECT * FROM Categories;
+SELECT * FROM Enrolments;
+SELECT * FROM Results;
