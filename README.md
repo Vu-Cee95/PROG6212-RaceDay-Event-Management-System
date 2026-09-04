@@ -34,3 +34,6 @@ The GitHub Actions workflow (`.github/workflows/part1-ci.yml`) validates that th
 
 ## Video Demonstration
 YouTube Link: [ADD YOUR UNLISTED YOUTUBE LINK HERE]
+
+## Repository Structure
+...
