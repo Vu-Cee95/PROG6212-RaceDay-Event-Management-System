@@ -50,3 +50,24 @@ CREATE TABLE Categories (
     Description NVARCHAR(100) NULL
 );
 GO
+
+-- 5. Create ENROLMENTS table
+CREATE TABLE Enrolments (
+    EnrolmentId INT IDENTITY(1,1) PRIMARY KEY,
+    ParticipantId INT NOT NULL FOREIGN KEY REFERENCES Users(UserId),
+    EventId INT NOT NULL FOREIGN KEY REFERENCES Events(EventId),
+    CategoryId INT NOT NULL FOREIGN KEY REFERENCES Categories(CategoryId),
+    EnrolmentDate DATETIME DEFAULT GETDATE(),
+    Status NVARCHAR(20) NOT NULL DEFAULT 'Pending'
+);
+GO
+
+-- 6. Create RESULTS table
+CREATE TABLE Results (
+    ResultId INT IDENTITY(1,1) PRIMARY KEY,
+    EnrolmentId INT NOT NULL UNIQUE FOREIGN KEY REFERENCES Enrolments(EnrolmentId),
+    FinishTime TIME(0) NULL,
+    FinishingPosition INT NULL,
+    Notes NVARCHAR(255) NULL
+);
+GO
