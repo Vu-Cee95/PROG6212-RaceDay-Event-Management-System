@@ -56,3 +56,13 @@ Before running the SQL script, ensure you have:
 1. SQL Server installed (e.g., SQL Server Express or Developer).
 2. SQL Server Management Studio (SSMS) installed.
 3. Permission to create a new database on your local instance.
+
+## CI/CD Pipeline Details
+The GitHub Actions workflow (`part1-ci.yml`) runs on every push and pull request. 
+It validates the repository structure by checking that:
+- The `/docs` folder exists.
+- The ERD PDF exists.
+- The API Endpoint Plan PDF exists.
+- The SQL script exists.
+- The README exists.
+This ensures that all required Part 1 deliverables are present before submission.
