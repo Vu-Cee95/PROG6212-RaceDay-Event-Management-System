@@ -36,4 +36,11 @@ The GitHub Actions workflow (`.github/workflows/part1-ci.yml`) validates that th
 YouTube Link: [ADD YOUR UNLISTED YOUTUBE LINK HERE]
 
 ## Repository Structure
-...
+The repository is structured as follows:
+
+- `docs/` - Contains all Part 1 planning documents
+  - `RaceDay_ERD.pdf`
+  - `RaceDay_API_Endpoint_Plan.pdf`
+  - `RaceDay_Database.sql`
+- `.github/workflows/` - Contains the CI/CD validation workflow
+- `README.md` - Project documentation
