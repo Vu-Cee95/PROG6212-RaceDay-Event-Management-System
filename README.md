@@ -71,3 +71,7 @@ This ensures that all required Part 1 deliverables are present before submission
 - The database script currently seeds with basic sample data. Advanced data validation is pending for Part 2.
 - The API endpoint plan is a planning document and has not yet been implemented in code.
 - The CI workflow checks for file existence but does not yet build an application (as Part 1 is planning only).
+
+## Future Work (Part 2 & 3)
+In Part 2, the RESTful API will be built using ASP.NET Core to match this endpoint plan. 
+In Part 3, the MVC application will be built to consume the API, integrate Azure Blob Storage for image uploads, and be containerized using Docker.
