@@ -85,3 +85,31 @@ INSERT INTO Users (Email, PasswordHash, FullName, Role) VALUES
 ('sarah.vandermerwe@raceday.co.za', 'Hash123!', 'Sarah van der Merwe', 'Organiser'),
 ('lwando.dlamini@gmail.com', 'Hash123!', 'Lwando Dlamini', 'Participant'),
 ('priya.naidoo@gmail.com', 'Hash123!', 'Priya Naidoo', 'Participant');
+
+-- Events (3 Events)
+INSERT INTO Events (OrganiserId, EventTypeId, Name, Description, EventDate, Location, Distance) VALUES 
+(1, 1, 'Soweto Marathon', 'The ultimate road running challenge in Johannesburg.', '2026-11-01 06:00:00', 'Soweto, Johannesburg', 42.20),
+(1, 3, 'Cape Town Cycle Tour', 'The worlds largest timed cycle race.', '2026-03-08 06:15:00', 'Cape Town, Western Cape', 109.00),
+(2, 2, 'Durban Park Run', 'A community 5km walk and run.', '2026-04-18 07:00:00', 'Durban, KwaZulu-Natal', 5.00);
+
+-- Categories (For each event)
+INSERT INTO Categories (EventId, CategoryName, Description) VALUES 
+(1, 'Under 20', 'Junior runners under the age of 20'),
+(1, 'Senior', 'Open category for all ages over 20'),
+(2, 'Elite', 'Professional and experienced cyclists'),
+(2, 'Amateur', 'Recreational cyclists'),
+(3, 'Walkers', 'Participants walking the 5km route'),
+(3, 'Runners', 'Participants running the 5km route');
+
+-- Enrolments (Sample)
+INSERT INTO Enrolments (ParticipantId, EventId, CategoryId, Status) VALUES 
+(3, 1, 2, 'Confirmed'),
+(4, 2, 4, 'Pending'),
+(3, 3, 5, 'Confirmed'),
+(4, 1, 1, 'Confirmed');
+
+-- Results (Sample - For the confirmed enrolments)
+INSERT INTO Results (EnrolmentId, FinishTime, FinishingPosition, Notes) VALUES 
+(1, '03:45:22', 120, 'Personal Best'),
+(3, '00:28:45', 45, NULL);
+GO
