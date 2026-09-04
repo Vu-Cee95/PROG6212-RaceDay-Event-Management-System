@@ -50,3 +50,9 @@ The repository is structured as follows:
 - Draw.io - Entity Relationship Diagram
 - GitHub Actions - CI/CD validation
 - Markdown - Documentation
+
+  ## Prerequisites for Database
+Before running the SQL script, ensure you have:
+1. SQL Server installed (e.g., SQL Server Express or Developer).
+2. SQL Server Management Studio (SSMS) installed.
+3. Permission to create a new database on your local instance.
