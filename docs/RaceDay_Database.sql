@@ -3,6 +3,11 @@
 -- Matches ERD exactly
 -- =============================================
 
+USE master;
+GO
+DROP DATABASE IF EXISTS RaceDay;
+GO
+
 CREATE DATABASE RaceDay;
 GO
 USE RaceDay;
