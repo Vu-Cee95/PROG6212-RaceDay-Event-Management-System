@@ -1,4 +1,3 @@
-using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
@@ -8,13 +7,11 @@ using RaceDay.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ---------------- Database (EF Core Code-First, SQL Server) ----------------
+// SQL Server database (Code-First)
 builder.Services.AddDbContext<RaceDayDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// ---------------- Session management ----------------
-// The server-side session stores the logged-in user's Id and Role. The client only
-// receives an opaque session cookie, which it sends back on every request.
+// Session stores the logged-in user's Id and Role. The browser just keeps a cookie.
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -26,7 +23,6 @@ builder.Services.AddSession(options =>
 });
 builder.Services.AddHttpContextAccessor();
 
-// ---------------- Application services ----------------
 builder.Services.AddScoped<ICurrentUserService, SessionCurrentUserService>();
 builder.Services.AddSingleton<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -36,15 +32,13 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IEnrolmentService, EnrolmentService>();
 builder.Services.AddScoped<IResultService, ResultService>();
 
-// ---------------- Health checks ----------------
-// Lightweight liveness probe used by the CI smoke step and by anyone hosting the API.
+// /health - used by CI and to check the API is up
 builder.Services.AddHealthChecks();
 
-// ---------------- MVC ----------------
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
     {
-        // Return validation failures in the same ApiError shape used by the services.
+        // Validation errors use the same ApiError JSON as the rest of the API.
         options.InvalidModelStateResponseFactory = context =>
         {
             var errors = context.ModelState
@@ -61,7 +55,6 @@ builder.Services.AddControllers()
         };
     });
 
-// ---------------- Swagger / OpenAPI ----------------
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -81,24 +74,14 @@ builder.Services.AddSwaggerGen(options =>
             "priya.naidoo@gmail.com (Participant)."
     });
 
+    // Swagger text comes from [SwaggerOperation] on each action.
     options.EnableAnnotations();
-
-    // Include the XML documentation comments written on controllers and DTOs.
-    foreach (var xmlFile in new[] { $"{Assembly.GetExecutingAssembly().GetName().Name}.xml", "RaceDay.Contracts.xml" })
-    {
-        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-        if (File.Exists(xmlPath))
-        {
-            options.IncludeXmlComments(xmlPath);
-        }
-    }
 });
 
 var app = builder.Build();
 
-// ---------------- Database migration + seed ----------------
-// Only when running against SQL Server. The test project swaps in an in-memory
-// provider and seeds its own data, so this block is skipped there.
+// Create/update the SQL Server database and add sample data on startup.
+// Tests use an in-memory database so this is skipped there.
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<RaceDayDbContext>();
@@ -109,9 +92,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// ---------------- HTTP pipeline ----------------
-// Unhandled exceptions are logged and returned as a generic ApiError (500) so clients
-// always receive the same JSON error shape and no stack trace or SQL detail leaks out.
+// If something unexpected goes wrong, return a simple JSON error (no stack trace).
 app.UseExceptionHandler(errorApp => errorApp.Run(async context =>
 {
     context.Response.StatusCode = StatusCodes.Status500InternalServerError;
@@ -121,7 +102,6 @@ app.UseExceptionHandler(errorApp => errorApp.Run(async context =>
     });
 }));
 
-// Swagger is enabled in every environment so the marker can open it directly.
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
@@ -139,7 +119,7 @@ app.MapHealthChecks("/health");
 
 app.Run();
 
-/// <summary>Marker type so the test project can host the API with WebApplicationFactory.</summary>
+// Needed so the test project can host this API in memory.
 public partial class Program
 {
 }
