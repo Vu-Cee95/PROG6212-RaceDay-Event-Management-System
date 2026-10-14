@@ -33,13 +33,13 @@ public static class DbSeeder
             await db.SaveChangesAsync();
         }
 
-        var hash = passwords.Hash(SeedPassword);
         var registered = new DateTime(2026, 1, 15, 9, 0, 0);
 
-        var thabo = new User { Email = "thabo.mokoena@raceday.co.za", PasswordHash = hash, FullName = "Thabo Mokoena", Role = UserRole.Organiser, DateRegistered = registered };
-        var sarah = new User { Email = "sarah.vandermerwe@raceday.co.za", PasswordHash = hash, FullName = "Sarah van der Merwe", Role = UserRole.Organiser, DateRegistered = registered };
-        var lwando = new User { Email = "lwando.dlamini@gmail.com", PasswordHash = hash, FullName = "Lwando Dlamini", Role = UserRole.Participant, DateRegistered = registered };
-        var priya = new User { Email = "priya.naidoo@gmail.com", PasswordHash = hash, FullName = "Priya Naidoo", Role = UserRole.Participant, DateRegistered = registered };
+        // Hash per user so every account gets its own random salt (as real registrations do).
+        var thabo = new User { Email = "thabo.mokoena@raceday.co.za", PasswordHash = passwords.Hash(SeedPassword), FullName = "Thabo Mokoena", Role = UserRole.Organiser, DateRegistered = registered };
+        var sarah = new User { Email = "sarah.vandermerwe@raceday.co.za", PasswordHash = passwords.Hash(SeedPassword), FullName = "Sarah van der Merwe", Role = UserRole.Organiser, DateRegistered = registered };
+        var lwando = new User { Email = "lwando.dlamini@gmail.com", PasswordHash = passwords.Hash(SeedPassword), FullName = "Lwando Dlamini", Role = UserRole.Participant, DateRegistered = registered };
+        var priya = new User { Email = "priya.naidoo@gmail.com", PasswordHash = passwords.Hash(SeedPassword), FullName = "Priya Naidoo", Role = UserRole.Participant, DateRegistered = registered };
 
         db.Users.AddRange(thabo, sarah, lwando, priya);
         await db.SaveChangesAsync();
