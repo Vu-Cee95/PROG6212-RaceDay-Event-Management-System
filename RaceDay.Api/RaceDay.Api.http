@@ -1,0 +1,111 @@
+### RaceDay API - sample requests
+### Open this file in Visual Studio (or VS Code with the REST Client extension) and
+### click "Send Request" above any block. Requests are sent in order; the login
+### response sets the .RaceDay.Session cookie which the HTTP client keeps for the
+### following requests, exactly as a browser would.
+
+@baseUrl = http://localhost:5261
+
+### Health probe (public)
+GET {{baseUrl}}/health
+
+### Event types lookup (public)
+GET {{baseUrl}}/api/eventtypes
+
+### Browse all events (public)
+GET {{baseUrl}}/api/events
+
+### Register a new Participant
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "new.runner@example.com",
+  "password": "Password123!",
+  "fullName": "New Runner",
+  "role": "Participant"
+}
+
+### Log in as the seeded Organiser (Thabo Mokoena)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "thabo.mokoena@raceday.co.za",
+  "password": "Password123!"
+}
+
+### My profile (any logged-in user)
+GET {{baseUrl}}/api/users/profile
+
+### My events (Organiser only)
+GET {{baseUrl}}/api/events/mine
+
+### Create an event (Organiser only)
+POST {{baseUrl}}/api/events
+Content-Type: application/json
+
+{
+  "name": "Pretoria Night Run",
+  "description": "10 km run through the Union Buildings gardens.",
+  "eventDate": "2027-02-20T18:30:00",
+  "location": "Pretoria, Gauteng",
+  "distance": 10.0,
+  "eventTypeId": 1
+}
+
+### Add a category to event 1 (Organiser who owns the event)
+POST {{baseUrl}}/api/events/1/categories
+Content-Type: application/json
+
+{
+  "categoryName": "Veterans 50+",
+  "description": "Runners aged 50 and over."
+}
+
+### View all enrolments for event 1 (Organiser who owns the event)
+GET {{baseUrl}}/api/events/1/enrolments
+
+### Capture a result for enrolment 4 (Priya in the Soweto Marathon - no result yet)
+POST {{baseUrl}}/api/enrolments/4/result
+Content-Type: application/json
+
+{
+  "finishTime": "04:10:33",
+  "finishingPosition": 210,
+  "notes": "First marathon."
+}
+
+### View all results for event 1 (Organiser who owns the event)
+GET {{baseUrl}}/api/events/1/results
+
+### Log out
+POST {{baseUrl}}/api/auth/logout
+
+### Log in as the seeded Participant (Lwando Dlamini)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "lwando.dlamini@gmail.com",
+  "password": "Password123!"
+}
+
+### Enter the Cape Town Cycle Tour (event 2) in the Amateur category (4) - Participant only
+### Lwando is already enrolled in events 1 and 3, so repeating those would return 409.
+POST {{baseUrl}}/api/enrolments
+Content-Type: application/json
+
+{
+  "eventId": 2,
+  "categoryId": 4
+}
+
+### My enrolments (Participant, own data only - user 3)
+GET {{baseUrl}}/api/users/3/enrolments
+
+### My results (Participant, own data only - user 3)
+GET {{baseUrl}}/api/users/3/results
+
+### Log out
+POST {{baseUrl}}/api/auth/logout
