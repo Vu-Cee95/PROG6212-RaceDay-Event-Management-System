@@ -1,0 +1,21 @@
+# Keeps NuGet packages and GitHub Actions versions current. Each update arrives as a
+# pull request that the Part 2 CI workflow builds and tests before it can be merged.
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    groups:
+      efcore:
+        patterns: ["Microsoft.EntityFrameworkCore*"]
+      aspnetcore:
+        patterns: ["Microsoft.AspNetCore*"]
+      testing:
+        patterns: ["xunit*", "Microsoft.NET.Test.Sdk", "coverlet*"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
