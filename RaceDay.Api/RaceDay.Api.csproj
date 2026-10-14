@@ -21,6 +21,8 @@
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.3.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="10.3.0" />
+    <!-- Transitive dependency of Microsoft.Data.SqlClient; pinned to a patched version (NU1902/NU1903). -->
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
   </ItemGroup>
 
   <ItemGroup>
