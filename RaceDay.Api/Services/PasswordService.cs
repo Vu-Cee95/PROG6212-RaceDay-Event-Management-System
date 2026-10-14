@@ -29,8 +29,16 @@ public class PasswordService : IPasswordService
             return false;
         }
 
-        var outcome = _hasher.VerifyHashedPassword(Dummy, hash, password);
-        return outcome is PasswordVerificationResult.Success
-                       or PasswordVerificationResult.SuccessRehashNeeded;
+        try
+        {
+            var outcome = _hasher.VerifyHashedPassword(Dummy, hash, password);
+            return outcome is PasswordVerificationResult.Success
+                           or PasswordVerificationResult.SuccessRehashNeeded;
+        }
+        catch (FormatException)
+        {
+            // Stored value is not a valid hash (e.g. corrupt data) - treat as a failed login.
+            return false;
+        }
     }
 }
