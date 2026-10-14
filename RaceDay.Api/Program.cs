@@ -30,6 +30,11 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, SessionCurrentUserService>();
 builder.Services.AddSingleton<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IEnrolmentService, EnrolmentService>();
+builder.Services.AddScoped<IResultService, ResultService>();
 
 // ---------------- MVC ----------------
 builder.Services.AddControllers()
