@@ -110,6 +110,17 @@ using (var scope = app.Services.CreateScope())
 }
 
 // ---------------- HTTP pipeline ----------------
+// Unhandled exceptions are logged and returned as a generic ApiError (500) so clients
+// always receive the same JSON error shape and no stack trace or SQL detail leaks out.
+app.UseExceptionHandler(errorApp => errorApp.Run(async context =>
+{
+    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+    await context.Response.WriteAsJsonAsync(new ApiError
+    {
+        Message = "An unexpected error occurred. Please try again later."
+    });
+}));
+
 // Swagger is enabled in every environment so the marker can open it directly.
 app.UseSwagger();
 app.UseSwaggerUI(options =>
