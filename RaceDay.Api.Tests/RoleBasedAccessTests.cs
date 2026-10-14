@@ -4,10 +4,7 @@ using RaceDay.Api.Tests.Infrastructure;
 
 namespace RaceDay.Api.Tests;
 
-/// <summary>
-/// Proves that every protected endpoint rejects anonymous callers (401) and that
-/// Organiser-only / Participant-only endpoints reject the other role (403).
-/// </summary>
+// Proves that every protected endpoint rejects anonymous callers (401) and that Organiser-only / Participant-only endpoints reject the other role (403).
 public class RoleBasedAccessTests : IClassFixture<RaceDayApiFactory>
 {
     private readonly RaceDayApiFactory _factory;

@@ -3,11 +3,7 @@ using RaceDay.Contracts;
 
 namespace RaceDay.Api.Services;
 
-/// <summary>
-/// Outcome of a service operation. Services decide the HTTP status code and
-/// message; controllers simply translate the result into an IActionResult.
-/// This keeps controllers thin and lets business rules be unit tested directly.
-/// </summary>
+// Outcome of a service operation.
 public class ServiceResult<T>
 {
     public int StatusCode { get; private init; }
@@ -25,7 +21,7 @@ public class ServiceResult<T>
     public static ServiceResult<T> NotFound(string message) => new() { StatusCode = StatusCodes.Status404NotFound, ErrorMessage = message };
     public static ServiceResult<T> Conflict(string message) => new() { StatusCode = StatusCodes.Status409Conflict, ErrorMessage = message };
 
-    /// <summary>Converts the result to the matching HTTP response.</summary>
+    // Converts the result to the matching HTTP response.
     public IActionResult ToActionResult(ControllerBase controller, string? createdAtRoute = null)
     {
         if (!IsSuccess)

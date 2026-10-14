@@ -8,12 +8,7 @@ using RaceDay.Api.Services;
 
 namespace RaceDay.Api.Tests.Infrastructure;
 
-/// <summary>
-/// Hosts the real RaceDay API in memory for tests. The SQL Server DbContext is
-/// replaced with the EF Core InMemory provider (a fresh database per factory) and
-/// seeded with the same sample data as the SQL script, so tests exercise the
-/// genuine controllers, filters, session handling and services end to end.
-/// </summary>
+// Hosts the real RaceDay API in memory for tests.
 public class RaceDayApiFactory : WebApplicationFactory<Program>
 {
     private readonly string _databaseName = $"RaceDayTests_{Guid.NewGuid():N}";
@@ -48,7 +43,7 @@ public class RaceDayApiFactory : WebApplicationFactory<Program>
         });
     }
 
-    /// <summary>Runs an action against the test database (for asserting persisted state).</summary>
+    // Runs an action against the test database (for asserting persisted state).
     public async Task<T> QueryDbAsync<T>(Func<RaceDayDbContext, Task<T>> query)
     {
         using var scope = Services.CreateScope();
@@ -56,7 +51,7 @@ public class RaceDayApiFactory : WebApplicationFactory<Program>
         return await query(db);
     }
 
-    /// <summary>Creates a client that keeps cookies, so the session survives between requests.</summary>
+    // Creates a client that keeps cookies, so the session survives between requests.
     public HttpClient CreateSessionClient() =>
         CreateClient(new WebApplicationFactoryClientOptions
         {

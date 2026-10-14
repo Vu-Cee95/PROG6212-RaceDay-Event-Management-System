@@ -5,11 +5,7 @@ using RaceDay.Contracts;
 
 namespace RaceDay.Api.Filters;
 
-/// <summary>
-/// Enforces role-based access from the server-side session:
-/// 401 Unauthorized when nobody is logged in, 403 Forbidden when the logged-in
-/// user has a different role (e.g. a Participant calling an Organiser endpoint).
-/// </summary>
+// Blocks the request if the user is not logged in (401) or has the wrong role (403).
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class RequireRoleAttribute : Attribute, IAuthorizationFilter
 {

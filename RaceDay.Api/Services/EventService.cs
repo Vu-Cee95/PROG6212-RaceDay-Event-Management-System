@@ -16,10 +16,7 @@ public interface IEventService
     Task<ServiceResult<object>> DeleteAsync(int eventId);
 }
 
-/// <summary>
-/// Event management. Anyone may read events; only Organisers may create them and
-/// only the owning Organiser may update or delete them.
-/// </summary>
+// Event management. Anyone may read events; only Organisers may create them and only the owning Organiser may update or delete them.
 public class EventService : IEventService
 {
     private readonly RaceDayDbContext _db;

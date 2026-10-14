@@ -6,10 +6,7 @@ using RaceDay.Contracts;
 
 namespace RaceDay.Api.Tests;
 
-/// <summary>
-/// Cross-cutting HTTP behaviour that every endpoint shares: the health probe,
-/// unknown routes, malformed JSON and the ApiError shape for validation failures.
-/// </summary>
+// Cross-cutting HTTP behaviour that every endpoint shares: the health probe, unknown routes, malformed JSON and the ApiError shape for validation failures.
 public class ApiBehaviourTests : IClassFixture<RaceDayApiFactory>
 {
     private readonly RaceDayApiFactory _factory;

@@ -3,18 +3,14 @@ using RaceDay.Api.Models;
 
 namespace RaceDay.Api.Services;
 
-/// <summary>Hashes and verifies passwords. Plain-text passwords are never persisted.</summary>
+// Hashes and verifies passwords. Plain-text passwords are never persisted.
 public interface IPasswordService
 {
     string Hash(string password);
     bool Verify(string hash, string password);
 }
 
-/// <summary>
-/// Wraps ASP.NET Core Identity's <see cref="PasswordHasher{TUser}"/> (PBKDF2 with
-/// HMAC-SHA512, 100 000 iterations and a random per-user salt). The hasher ships
-/// with the ASP.NET Core shared framework, so no extra NuGet package is required.
-/// </summary>
+// Uses ASP.NET Identity's PasswordHasher so each password gets its own salt.
 public class PasswordService : IPasswordService
 {
     private readonly PasswordHasher<User> _hasher = new();

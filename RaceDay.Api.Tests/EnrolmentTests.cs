@@ -7,7 +7,7 @@ using RaceDay.Contracts;
 
 namespace RaceDay.Api.Tests;
 
-/// <summary>Participants enrol in events; Organisers view and manage enrolments for their events.</summary>
+// Participants enrol in events; Organisers view and manage enrolments for their events.
 public class EnrolmentTests : IClassFixture<RaceDayApiFactory>
 {
     private readonly RaceDayApiFactory _factory;

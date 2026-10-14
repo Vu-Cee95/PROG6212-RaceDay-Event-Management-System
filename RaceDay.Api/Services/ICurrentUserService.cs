@@ -1,28 +1,23 @@
 namespace RaceDay.Api.Services;
 
-/// <summary>
-/// Exposes the identity of the caller as stored in the server-side session.
-/// After login the session holds the UserId and Role; every subsequent request
-/// carries the session cookie, so the API can resolve "who is calling" without
-/// the client re-sending credentials.
-/// </summary>
+// Exposes the identity of the caller as stored in the server-side session.
 public interface ICurrentUserService
 {
-    /// <summary>True when the session contains a logged-in user.</summary>
+    // True when the session contains a logged-in user.
     bool IsAuthenticated { get; }
 
-    /// <summary>UserId stored in the session, or null when not logged in.</summary>
+    // UserId stored in the session, or null when not logged in.
     int? UserId { get; }
 
-    /// <summary>Role ("Organiser"/"Participant") stored in the session, or null.</summary>
+    // Role ("Organiser"/"Participant") stored in the session, or null.
     string? Role { get; }
 
     bool IsInRole(string role);
 
-    /// <summary>Writes the user's identity and role into the session (called on login/register).</summary>
+    // Writes the user's identity and role into the session (called on login/register).
     void SignIn(int userId, string role);
 
-    /// <summary>Clears the session (called on logout).</summary>
+    // Clears the session (called on logout).
     void SignOut();
 }
 

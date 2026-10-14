@@ -13,11 +13,7 @@ public interface IEnrolmentService
     Task<ServiceResult<EnrolmentDto>> UpdateStatusAsync(int enrolmentId, UpdateEnrolmentStatusRequest request);
 }
 
-/// <summary>
-/// An Enrolment links a Participant to an Event and the Category they selected.
-/// Participants create and view their own enrolments; the owning Organiser views
-/// (and may change the status of) enrolments for their events.
-/// </summary>
+// An Enrolment links a Participant to an Event and the Category they selected.
 public class EnrolmentService : IEnrolmentService
 {
     private readonly RaceDayDbContext _db;

@@ -4,7 +4,7 @@ using RaceDay.Contracts;
 
 namespace RaceDay.Api.Tests.Infrastructure;
 
-/// <summary>Helpers that drive the API the way a real client would.</summary>
+// Helpers that drive the API the way a real client would.
 public static class ApiClientExtensions
 {
     public const string SeedPassword = "Password123!";
@@ -39,7 +39,7 @@ public static class ApiClientExtensions
     public static Task<AuthResponse> LoginAsSeedParticipantAsync(this HttpClient client) =>
         client.LoginAsync(SeedParticipantEmail);
 
-    /// <summary>Registers a brand-new user with the given role and logs them in.</summary>
+    // Registers a brand-new user with the given role and logs them in.
     public static async Task<AuthResponse> RegisterAndLoginAsync(this HttpClient client, string role, string? fullName = null)
     {
         var email = UniqueEmail(role.ToLowerInvariant());
@@ -64,7 +64,7 @@ public static class ApiClientExtensions
         EventTypeId = 1
     };
 
-    /// <summary>Creates an event as the currently logged-in organiser.</summary>
+    // Creates an event as the currently logged-in organiser.
     public static async Task<EventDto> CreateEventAsync(this HttpClient client, string? name = null)
     {
         var response = await client.PostAsJsonAsync("/api/events", NewEventRequest(name));

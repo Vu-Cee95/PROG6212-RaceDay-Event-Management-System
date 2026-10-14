@@ -13,10 +13,7 @@ public interface ICategoryService
     Task<ServiceResult<object>> DeleteAsync(int categoryId);
 }
 
-/// <summary>
-/// Age/distance categories belong to an Event. Anyone may view them; only the
-/// Organiser who owns the Event may create, update or delete them.
-/// </summary>
+// Age/distance categories belong to an Event. Anyone may view them; only the Organiser who owns the Event may create, update or delete them.
 public class CategoryService : ICategoryService
 {
     private readonly RaceDayDbContext _db;

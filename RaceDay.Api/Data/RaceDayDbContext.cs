@@ -3,12 +3,7 @@ using RaceDay.Api.Models;
 
 namespace RaceDay.Api.Data;
 
-/// <summary>
-/// EF Core (Code-First) DbContext for RaceDay. The model configuration below
-/// reproduces the Part 1 SQL script (docs/RaceDay_Database.sql) table by table:
-/// same table names, column types, NOT NULL / UNIQUE / DEFAULT / CHECK
-/// constraints and foreign keys (all FKs use NO ACTION, as in the script).
-/// </summary>
+// EF Core (Code-First) DbContext for RaceDay.
 public class RaceDayDbContext : DbContext
 {
     public RaceDayDbContext(DbContextOptions<RaceDayDbContext> options) : base(options)

@@ -7,7 +7,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace RaceDay.Api.Controllers;
 
-/// <summary>Age or distance categories for an event (e.g. Under 20, Senior, 10km, 21km).</summary>
+// Age or distance categories for an event (e.g. Under 20, Senior, 10km, 21km).
 [ApiController]
 [Tags("Categories")]
 [Produces("application/json")]
@@ -20,7 +20,7 @@ public class CategoriesController : ControllerBase
         _categories = categories;
     }
 
-    /// <summary>List the categories of an event.</summary>
+    // List the categories of an event.
     [HttpGet("api/events/{eventId:int}/categories")]
     [SwaggerOperation(Summary = "Retrieve all categories for an event",
         Description = "Public. Both roles can view the categories available for an event. 404 if the event does not exist.")]
@@ -32,7 +32,7 @@ public class CategoriesController : ControllerBase
         return result.ToActionResult(this);
     }
 
-    /// <summary>Add a category to an event.</summary>
+    // Add a category to an event.
     [HttpPost("api/events/{eventId:int}/categories")]
     [RequireRole(UserRole.Organiser)]
     [SwaggerOperation(Summary = "Add a new category to an event",
@@ -48,7 +48,7 @@ public class CategoriesController : ControllerBase
         return result.ToActionResult(this);
     }
 
-    /// <summary>Update a category.</summary>
+    // Update a category.
     [HttpPut("api/categories/{categoryId:int}")]
     [RequireRole(UserRole.Organiser)]
     [SwaggerOperation(Summary = "Update a category",
@@ -64,7 +64,7 @@ public class CategoriesController : ControllerBase
         return result.ToActionResult(this);
     }
 
-    /// <summary>Delete a category.</summary>
+    // Delete a category.
     [HttpDelete("api/categories/{categoryId:int}")]
     [RequireRole(UserRole.Organiser)]
     [SwaggerOperation(Summary = "Delete a category",

@@ -2,11 +2,7 @@ using RaceDay.Contracts;
 
 namespace RaceDay.Api.Tests.Infrastructure;
 
-/// <summary>
-/// A self-contained scenario: a fresh Organiser who owns a fresh Event with one
-/// Category, plus a fresh Participant. Each client keeps its own session cookie.
-/// Using new users/events per scenario keeps tests independent of each other.
-/// </summary>
+// A self-contained scenario: a fresh Organiser who owns a fresh Event with one Category, plus a fresh Participant.
 public sealed class RaceEventFixture : IDisposable
 {
     public HttpClient Organiser { get; }

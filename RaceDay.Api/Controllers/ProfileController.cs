@@ -6,7 +6,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace RaceDay.Api.Controllers;
 
-/// <summary>View and update the logged-in user's own profile (both roles).</summary>
+// View and update the logged-in user's own profile (both roles).
 [ApiController]
 [Route("api/users/profile")]
 [Tags("User Profile")]
@@ -21,8 +21,7 @@ public class ProfileController : ControllerBase
         _profiles = profiles;
     }
 
-    /// <summary>Get my profile.</summary>
-    /// <remarks>Returns the profile of the user identified by the current session.</remarks>
+    // Get my profile.
     [HttpGet]
     [SwaggerOperation(Summary = "Get the logged-in user's profile",
         Description = "Any logged-in user (Organiser or Participant). The user is resolved from the session, never from the URL.")]
@@ -34,8 +33,7 @@ public class ProfileController : ControllerBase
         return result.ToActionResult(this);
     }
 
-    /// <summary>Update my profile.</summary>
-    /// <remarks>Updates the full name and (optional) profile picture URL of the logged-in user.</remarks>
+    // Update my profile.
     [HttpPut]
     [SwaggerOperation(Summary = "Update the logged-in user's profile",
         Description = "Any logged-in user. Body: { fullName, profilePictureUrl }. Email and role cannot be changed here.")]

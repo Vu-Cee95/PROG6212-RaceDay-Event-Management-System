@@ -4,13 +4,7 @@ using RaceDay.Api.Services;
 
 namespace RaceDay.Api.Data;
 
-/// <summary>
-/// Seeds the database with the same realistic sample data as the Part 1 SQL
-/// script (2 Organisers, 2 Participants, 3 Events, 6 Categories, 4 Enrolments,
-/// 2 Results). Unlike the script, passwords are stored as proper hashes.
-/// All seeded accounts use the password <c>Password123!</c>.
-/// Seeding is idempotent: it does nothing when users already exist.
-/// </summary>
+// Adds the same sample users, events, categories, enrolments and results as the Part 1 SQL script.
 public static class DbSeeder
 {
     public const string SeedPassword = "Password123!";

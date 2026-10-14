@@ -8,7 +8,7 @@ using RaceDay.Contracts;
 
 namespace RaceDay.Api.Tests;
 
-/// <summary>User registration, login, logout and password storage.</summary>
+// User registration, login, logout and password storage.
 public class AuthenticationTests : IClassFixture<RaceDayApiFactory>
 {
     private readonly RaceDayApiFactory _factory;

@@ -5,10 +5,7 @@ using RaceDay.Contracts;
 
 namespace RaceDay.Api.Filters;
 
-/// <summary>
-/// Rejects requests that do not carry a logged-in session with
-/// 401 Unauthorized. Apply to any non-public endpoint that both roles may use.
-/// </summary>
+// Blocks the request with 401 if nobody is logged in.
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class RequireAuthenticatedAttribute : Attribute, IAuthorizationFilter
 {

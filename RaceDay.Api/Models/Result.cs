@@ -1,23 +1,20 @@
 namespace RaceDay.Api.Models;
 
-/// <summary>
-/// Results table (Part 1 ERD: RESULTS). One Result per Enrolment (EnrolmentId
-/// is UNIQUE), captured by the Organiser after the Event concludes.
-/// </summary>
+// Results table (Part 1 ERD: RESULTS). One Result per Enrolment (EnrolmentId is UNIQUE), captured by the Organiser after the Event concludes.
 public class Result
 {
     public int ResultId { get; set; }
 
-    /// <summary>FK to Enrolments.EnrolmentId, UNIQUE - gives the 1:1 relationship.</summary>
+    // FK to Enrolments.EnrolmentId, UNIQUE - gives the 1:1 relationship.
     public int EnrolmentId { get; set; }
 
-    /// <summary>TIME(0), NULL.</summary>
+    // TIME(0), NULL.
     public TimeSpan? FinishTime { get; set; }
 
-    /// <summary>INT, NULL.</summary>
+    // INT, NULL.
     public int? FinishingPosition { get; set; }
 
-    /// <summary>NVARCHAR(255), NULL.</summary>
+    // NVARCHAR(255), NULL.
     public string? Notes { get; set; }
 
     // Navigation property

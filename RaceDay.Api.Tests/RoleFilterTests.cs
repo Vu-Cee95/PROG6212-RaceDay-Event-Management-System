@@ -10,10 +10,7 @@ using RaceDay.Api.Services;
 
 namespace RaceDay.Api.Tests;
 
-/// <summary>
-/// Unit tests for the authorisation filters in isolation, using a fake session
-/// user. These prove the 401/403 decisions independently of any controller.
-/// </summary>
+// Unit tests for the authorisation filters in isolation, using a fake session user.
 public class RoleFilterTests
 {
     private sealed class FakeCurrentUser : ICurrentUserService

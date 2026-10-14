@@ -2,16 +2,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RaceDay.Contracts;
 
-// ---------------------------------------------------------------------------
-// Data Transfer Objects shared between the RaceDay API (Part 2) and the
-// RaceDay MVC client (Part 3). DTOs describe the data moving in and out of
-// the API; they are deliberately separate from the EF Core entity models.
-// Field names follow the request bodies defined in the Part 1 endpoint plan.
-// ---------------------------------------------------------------------------
+// Request and response models used by the API (and later by the MVC app).
+// These are separate from the database entity classes.
 
 #region Authentication
 
-/// <summary>Body for POST /api/auth/register.</summary>
+// Body for POST /api/auth/register.
 public class RegisterRequest
 {
     [Required, EmailAddress, MaxLength(255)]
@@ -23,12 +19,12 @@ public class RegisterRequest
     [Required, MaxLength(100)]
     public string FullName { get; set; } = string.Empty;
 
-    /// <summary>Either "Organiser" or "Participant".</summary>
+    // Either "Organiser" or "Participant".
     [Required, MaxLength(20)]
     public string Role { get; set; } = string.Empty;
 }
 
-/// <summary>Body for POST /api/auth/login.</summary>
+// Body for POST /api/auth/login.
 public class LoginRequest
 {
     [Required, EmailAddress]
@@ -38,7 +34,7 @@ public class LoginRequest
     public string Password { get; set; } = string.Empty;
 }
 
-/// <summary>Returned after a successful login or registration.</summary>
+// Returned after a successful login or registration.
 public class AuthResponse
 {
     public int UserId { get; set; }
@@ -52,7 +48,7 @@ public class AuthResponse
 
 #region Profile
 
-/// <summary>Response for GET /api/users/profile.</summary>
+// Response for GET /api/users/profile.
 public class ProfileDto
 {
     public int UserId { get; set; }
@@ -63,7 +59,7 @@ public class ProfileDto
     public DateTime DateRegistered { get; set; }
 }
 
-/// <summary>Body for PUT /api/users/profile.</summary>
+// Body for PUT /api/users/profile.
 public class UpdateProfileRequest
 {
     [Required, MaxLength(100)]
@@ -77,7 +73,7 @@ public class UpdateProfileRequest
 
 #region Event Types
 
-/// <summary>Lookup value returned by GET /api/eventtypes (Run, Walk, Cycle).</summary>
+// Lookup value returned by GET /api/eventtypes (Run, Walk, Cycle).
 public class EventTypeDto
 {
     public int EventTypeId { get; set; }
@@ -88,7 +84,7 @@ public class EventTypeDto
 
 #region Events
 
-/// <summary>Body for POST /api/events.</summary>
+// Body for POST /api/events.
 public class CreateEventRequest
 {
     [Required, MaxLength(100)]
@@ -102,21 +98,21 @@ public class CreateEventRequest
     [Required, MaxLength(200)]
     public string Location { get; set; } = string.Empty;
 
-    /// <summary>Distance in kilometres (e.g. 10.00, 21.10, 42.20).</summary>
+    // Distance in kilometres (e.g. 10.00, 21.10, 42.20).
     [Range(0.1, 999.99)]
     public decimal Distance { get; set; }
 
-    /// <summary>Foreign key to the EventTypes lookup (1 = Run, 2 = Walk, 3 = Cycle).</summary>
+    // Foreign key to the EventTypes lookup (1 = Run, 2 = Walk, 3 = Cycle).
     [Range(1, int.MaxValue)]
     public int EventTypeId { get; set; }
 }
 
-/// <summary>Body for PUT /api/events/{eventId}.</summary>
+// Body for PUT /api/events/{eventId}.
 public class UpdateEventRequest : CreateEventRequest
 {
 }
 
-/// <summary>Response shape for an Event.</summary>
+// Response shape for an Event.
 public class EventDto
 {
     public int EventId { get; set; }
@@ -139,7 +135,7 @@ public class EventDto
 
 #region Categories
 
-/// <summary>Body for POST /api/events/{eventId}/categories and PUT /api/categories/{categoryId}.</summary>
+// Body for POST /api/events/{eventId}/categories and PUT /api/categories/{categoryId}.
 public class CategoryRequest
 {
     [Required, MaxLength(50)]
@@ -149,7 +145,7 @@ public class CategoryRequest
     public string? Description { get; set; }
 }
 
-/// <summary>Response shape for a Category.</summary>
+// Response shape for a Category.
 public class CategoryDto
 {
     public int CategoryId { get; set; }
@@ -162,7 +158,7 @@ public class CategoryDto
 
 #region Enrolments
 
-/// <summary>Body for POST /api/enrolments.</summary>
+// Body for POST /api/enrolments.
 public class CreateEnrolmentRequest
 {
     [Range(1, int.MaxValue)]
@@ -172,15 +168,15 @@ public class CreateEnrolmentRequest
     public int CategoryId { get; set; }
 }
 
-/// <summary>Body for PUT /api/enrolments/{enrolmentId}/status.</summary>
+// Body for PUT /api/enrolments/{enrolmentId}/status.
 public class UpdateEnrolmentStatusRequest
 {
-    /// <summary>One of: Pending, Confirmed, Cancelled.</summary>
+    // One of: Pending, Confirmed, Cancelled.
     [Required, MaxLength(20)]
     public string Status { get; set; } = string.Empty;
 }
 
-/// <summary>Response shape for an Enrolment.</summary>
+// Response shape for an Enrolment.
 public class EnrolmentDto
 {
     public int EnrolmentId { get; set; }
@@ -201,10 +197,10 @@ public class EnrolmentDto
 
 #region Results
 
-/// <summary>Body for POST /api/enrolments/{enrolmentId}/result.</summary>
+// Body for POST /api/enrolments/{enrolmentId}/result.
 public class CreateResultRequest
 {
-    /// <summary>Finish time in hh:mm:ss format, e.g. "03:45:22".</summary>
+    // Finish time in hh:mm:ss format, e.g. "03:45:22".
     [Required]
     public TimeSpan FinishTime { get; set; }
 
@@ -215,7 +211,7 @@ public class CreateResultRequest
     public string? Notes { get; set; }
 }
 
-/// <summary>Response shape for a Result, including the race context.</summary>
+// Response shape for a Result, including the race context.
 public class ResultDto
 {
     public int ResultId { get; set; }
@@ -228,7 +224,7 @@ public class ResultDto
     public string CategoryName { get; set; } = string.Empty;
     public TimeSpan? FinishTime { get; set; }
     public int? FinishingPosition { get; set; }
-    /// <summary>Total number of recorded finishers for the event (for "47th out of 312").</summary>
+    // Total number of recorded finishers for the event (for "47th out of 312").
     public int TotalFinishers { get; set; }
     public string? Notes { get; set; }
 }
@@ -237,7 +233,7 @@ public class ResultDto
 
 #region Common
 
-/// <summary>Standard error payload returned for 4xx responses.</summary>
+// Standard error payload returned for 4xx responses.
 public class ApiError
 {
     public string Message { get; set; } = string.Empty;

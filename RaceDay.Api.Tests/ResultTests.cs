@@ -7,7 +7,7 @@ using RaceDay.Contracts;
 
 namespace RaceDay.Api.Tests;
 
-/// <summary>Organisers capture results for their events; Participants view their own results.</summary>
+// Organisers capture results for their events; Participants view their own results.
 public class ResultTests : IClassFixture<RaceDayApiFactory>
 {
     private readonly RaceDayApiFactory _factory;

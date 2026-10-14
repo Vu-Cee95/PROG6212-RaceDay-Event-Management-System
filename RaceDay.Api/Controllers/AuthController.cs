@@ -5,7 +5,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace RaceDay.Api.Controllers;
 
-/// <summary>Registration, login and logout for Organisers and Participants.</summary>
+// Registration, login and logout for Organisers and Participants.
 [ApiController]
 [Route("api/auth")]
 [Tags("Auth")]
@@ -19,12 +19,7 @@ public class AuthController : ControllerBase
         _auth = auth;
     }
 
-    /// <summary>Register a new account.</summary>
-    /// <remarks>
-    /// Creates a user with the chosen role (<c>Organiser</c> or <c>Participant</c>).
-    /// The password is hashed before it is stored; the plain-text value is never saved.
-    /// Public endpoint - no login required.
-    /// </remarks>
+    // Register a new account.
     [HttpPost("register")]
     [SwaggerOperation(Summary = "Register a new Organiser or Participant",
         Description = "Public. Validates the details, checks the email is not already in use, hashes the password and saves the user.")]
@@ -36,12 +31,7 @@ public class AuthController : ControllerBase
         return result.ToActionResult(this);
     }
 
-    /// <summary>Log in with email and password.</summary>
-    /// <remarks>
-    /// Verifies the password against the stored hash and creates a server-side session
-    /// holding the user's Id and Role. The session cookie returned here is sent
-    /// automatically by the browser (and by Swagger UI) on subsequent requests.
-    /// </remarks>
+    // Log in with email and password.
     [HttpPost("login")]
     [SwaggerOperation(Summary = "Log in and start a session",
         Description = "Public. On success a session cookie is issued that stores the UserId and Role for all later requests.")]
@@ -54,8 +44,7 @@ public class AuthController : ControllerBase
         return result.ToActionResult(this);
     }
 
-    /// <summary>Log out and end the session.</summary>
-    /// <remarks>Clears the server-side session so protected endpoints return 401 again.</remarks>
+    // Log out and end the session.
     [HttpPost("logout")]
     [SwaggerOperation(Summary = "Log out and clear the session",
         Description = "Any caller. Clears the server-side session; safe to call even when not logged in.")]

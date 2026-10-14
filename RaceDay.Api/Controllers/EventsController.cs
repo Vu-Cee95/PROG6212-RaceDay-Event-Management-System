@@ -7,7 +7,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace RaceDay.Api.Controllers;
 
-/// <summary>Browse events (public) and manage events (Organiser only).</summary>
+// Browse events (public) and manage events (Organiser only).
 [ApiController]
 [Route("api/events")]
 [Tags("Events")]
@@ -21,15 +21,14 @@ public class EventsController : ControllerBase
         _events = events;
     }
 
-    /// <summary>List all events.</summary>
-    /// <remarks>Public. Returns every event ordered by date, including organiser and event type names.</remarks>
+    // List all events.
     [HttpGet]
     [SwaggerOperation(Summary = "Retrieve all available events",
         Description = "Public. Both roles (and anonymous visitors) can browse events.")]
     [ProducesResponseType(typeof(IEnumerable<EventDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll() => Ok(await _events.GetAllAsync());
 
-    /// <summary>List the events created by the logged-in Organiser.</summary>
+    // List the events created by the logged-in Organiser.
     [HttpGet("mine")]
     [RequireRole(UserRole.Organiser)]
     [SwaggerOperation(Summary = "Retrieve the events created by the logged-in Organiser",
@@ -39,7 +38,7 @@ public class EventsController : ControllerBase
     [ProducesResponseType(typeof(ApiError), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetMine() => Ok(await _events.GetMineAsync());
 
-    /// <summary>Get a single event.</summary>
+    // Get a single event.
     [HttpGet("{eventId:int}")]
     [SwaggerOperation(Summary = "Return details of a specific event",
         Description = "Public. Returns 404 if the event does not exist.")]
@@ -51,11 +50,7 @@ public class EventsController : ControllerBase
         return result.ToActionResult(this);
     }
 
-    /// <summary>Create an event.</summary>
-    /// <remarks>
-    /// Organiser only. Captures name, description, date, location, distance (km) and event type.
-    /// The logged-in Organiser becomes the owner of the event.
-    /// </remarks>
+    // Create an event.
     [HttpPost]
     [RequireRole(UserRole.Organiser)]
     [SwaggerOperation(Summary = "Create a new RaceDay event",
@@ -70,8 +65,7 @@ public class EventsController : ControllerBase
         return result.ToActionResult(this);
     }
 
-    /// <summary>Update an event.</summary>
-    /// <remarks>Organiser only, and only for events the Organiser created (otherwise 403).</remarks>
+    // Update an event.
     [HttpPut("{eventId:int}")]
     [RequireRole(UserRole.Organiser)]
     [SwaggerOperation(Summary = "Update an existing event",
@@ -87,11 +81,7 @@ public class EventsController : ControllerBase
         return result.ToActionResult(this);
     }
 
-    /// <summary>Delete an event.</summary>
-    /// <remarks>
-    /// Organiser only, and only for events the Organiser created. Events that already have
-    /// participant enrolments cannot be deleted (409 Conflict).
-    /// </remarks>
+    // Delete an event.
     [HttpDelete("{eventId:int}")]
     [RequireRole(UserRole.Organiser)]
     [SwaggerOperation(Summary = "Delete an event",

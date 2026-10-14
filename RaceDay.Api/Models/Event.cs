@@ -1,38 +1,35 @@
 namespace RaceDay.Api.Models;
 
-/// <summary>
-/// Events table (Part 1 ERD: EVENTS). An Event is created by one Organiser
-/// and has one EventType (Run, Walk or Cycle).
-/// </summary>
+// Events table (Part 1 ERD: EVENTS). An Event is created by one Organiser and has one EventType (Run, Walk or Cycle).
 public class Event
 {
     public int EventId { get; set; }
 
-    /// <summary>FK to Users.UserId - the Organiser who owns this event.</summary>
+    // FK to Users.UserId - the Organiser who owns this event.
     public int OrganiserId { get; set; }
 
-    /// <summary>FK to EventTypes.EventTypeId.</summary>
+    // FK to EventTypes.EventTypeId.
     public int EventTypeId { get; set; }
 
-    /// <summary>NVARCHAR(100), NOT NULL.</summary>
+    // NVARCHAR(100), NOT NULL.
     public string Name { get; set; } = string.Empty;
 
-    /// <summary>NVARCHAR(MAX), NULL.</summary>
+    // NVARCHAR(MAX), NULL.
     public string? Description { get; set; }
 
-    /// <summary>DATETIME, NOT NULL.</summary>
+    // DATETIME, NOT NULL.
     public DateTime EventDate { get; set; }
 
-    /// <summary>NVARCHAR(200), NOT NULL.</summary>
+    // NVARCHAR(200), NOT NULL.
     public string Location { get; set; } = string.Empty;
 
-    /// <summary>DECIMAL(5,2), NOT NULL. Distance in kilometres.</summary>
+    // DECIMAL(5,2), NOT NULL. Distance in kilometres.
     public decimal Distance { get; set; }
 
-    /// <summary>NVARCHAR(500), NULL. Populated by Azure Blob Storage in Part 3.</summary>
+    // NVARCHAR(500), NULL. Populated by Azure Blob Storage in Part 3.
     public string? BannerImageUrl { get; set; }
 
-    /// <summary>DATETIME DEFAULT GETDATE().</summary>
+    // DATETIME DEFAULT GETDATE().
     public DateTime CreatedDate { get; set; }
 
     // Navigation properties

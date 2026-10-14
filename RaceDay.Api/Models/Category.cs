@@ -1,20 +1,17 @@
 namespace RaceDay.Api.Models;
 
-/// <summary>
-/// Categories table (Part 1 ERD: CATEGORIES). Age or distance categories
-/// defined by the Organiser for a specific Event (e.g. Under 20, Senior, 10km).
-/// </summary>
+// Categories table (Part 1 ERD: CATEGORIES).
 public class Category
 {
     public int CategoryId { get; set; }
 
-    /// <summary>FK to Events.EventId.</summary>
+    // FK to Events.EventId.
     public int EventId { get; set; }
 
-    /// <summary>NVARCHAR(50), NOT NULL.</summary>
+    // NVARCHAR(50), NOT NULL.
     public string CategoryName { get; set; } = string.Empty;
 
-    /// <summary>NVARCHAR(100), NULL.</summary>
+    // NVARCHAR(100), NULL.
     public string? Description { get; set; }
 
     // Navigation properties

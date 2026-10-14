@@ -1,26 +1,23 @@
 namespace RaceDay.Api.Models;
 
-/// <summary>
-/// Enrolments table (Part 1 ERD: ENROLMENT). Records the link between a
-/// Participant, the Event they entered and the Category they selected.
-/// </summary>
+// Enrolments table (Part 1 ERD: ENROLMENT). Records the link between a Participant, the Event they entered and the Category they selected.
 public class Enrolment
 {
     public int EnrolmentId { get; set; }
 
-    /// <summary>FK to Users.UserId - the Participant who entered.</summary>
+    // FK to Users.UserId - the Participant who entered.
     public int ParticipantId { get; set; }
 
-    /// <summary>FK to Events.EventId.</summary>
+    // FK to Events.EventId.
     public int EventId { get; set; }
 
-    /// <summary>FK to Categories.CategoryId.</summary>
+    // FK to Categories.CategoryId.
     public int CategoryId { get; set; }
 
-    /// <summary>DATETIME DEFAULT GETDATE().</summary>
+    // DATETIME DEFAULT GETDATE().
     public DateTime EnrolmentDate { get; set; }
 
-    /// <summary>NVARCHAR(20), NOT NULL, DEFAULT 'Pending'.</summary>
+    // NVARCHAR(20), NOT NULL, DEFAULT 'Pending'.
     public string Status { get; set; } = EnrolmentStatus.Pending;
 
     // Navigation properties

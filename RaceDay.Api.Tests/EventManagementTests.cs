@@ -6,7 +6,7 @@ using RaceDay.Contracts;
 
 namespace RaceDay.Api.Tests;
 
-/// <summary>Organisers manage events; everyone can view them.</summary>
+// Organisers manage events; everyone can view them.
 public class EventManagementTests : IClassFixture<RaceDayApiFactory>
 {
     private readonly RaceDayApiFactory _factory;

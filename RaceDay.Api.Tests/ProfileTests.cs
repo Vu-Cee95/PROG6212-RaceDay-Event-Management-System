@@ -7,7 +7,7 @@ using RaceDay.Contracts;
 
 namespace RaceDay.Api.Tests;
 
-/// <summary>Both roles can view and update their own profile - and only their own.</summary>
+// Both roles can view and update their own profile - and only their own.
 public class ProfileTests : IClassFixture<RaceDayApiFactory>
 {
     private readonly RaceDayApiFactory _factory;

@@ -7,7 +7,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace RaceDay.Api.Controllers;
 
-/// <summary>Event enrolments: Participants enter events, Organisers view enrolments for their events.</summary>
+// Event enrolments: Participants enter events, Organisers view enrolments for their events.
 [ApiController]
 [Tags("Enrolments")]
 [Produces("application/json")]
@@ -20,11 +20,7 @@ public class EnrolmentsController : ControllerBase
         _enrolments = enrolments;
     }
 
-    /// <summary>Enter an event.</summary>
-    /// <remarks>
-    /// Participant only. Records the link between the logged-in Participant, the event and the
-    /// selected category. A Participant can enter a given event once (409 if already enrolled).
-    /// </remarks>
+    // Enter an event.
     [HttpPost("api/enrolments")]
     [RequireRole(UserRole.Participant)]
     [SwaggerOperation(Summary = "Enrol the logged-in Participant in an event",
@@ -40,8 +36,7 @@ public class EnrolmentsController : ControllerBase
         return result.ToActionResult(this);
     }
 
-    /// <summary>View a Participant's own enrolments.</summary>
-    /// <remarks>Participant only. The userId in the route must be the logged-in user's own Id (otherwise 403).</remarks>
+    // View a Participant's own enrolments.
     [HttpGet("api/users/{userId:int}/enrolments")]
     [RequireRole(UserRole.Participant)]
     [SwaggerOperation(Summary = "Retrieve a Participant's own enrolments",
@@ -55,8 +50,7 @@ public class EnrolmentsController : ControllerBase
         return result.ToActionResult(this);
     }
 
-    /// <summary>View all enrolments for an event.</summary>
-    /// <remarks>Organiser only, and only for events the Organiser created.</remarks>
+    // View all enrolments for an event.
     [HttpGet("api/events/{eventId:int}/enrolments")]
     [RequireRole(UserRole.Organiser)]
     [SwaggerOperation(Summary = "Retrieve all enrolments for an event",
@@ -71,8 +65,7 @@ public class EnrolmentsController : ControllerBase
         return result.ToActionResult(this);
     }
 
-    /// <summary>Update an enrolment's status.</summary>
-    /// <remarks>Organiser only, for enrolments of their own events. Status: Pending, Confirmed or Cancelled.</remarks>
+    // Update an enrolment's status.
     [HttpPut("api/enrolments/{enrolmentId:int}/status")]
     [RequireRole(UserRole.Organiser)]
     [SwaggerOperation(Summary = "Confirm, cancel or reset an enrolment",

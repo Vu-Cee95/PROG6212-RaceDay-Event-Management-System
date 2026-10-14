@@ -11,10 +11,7 @@ public interface IProfileService
     Task<ServiceResult<ProfileDto>> UpdateMyProfileAsync(UpdateProfileRequest request);
 }
 
-/// <summary>
-/// Profile operations always act on the user identified by the session - a user
-/// can only ever read or update their own account.
-/// </summary>
+// Profile operations always act on the user identified by the session - a user can only ever read or update their own account.
 public class ProfileService : IProfileService
 {
     private readonly RaceDayDbContext _db;

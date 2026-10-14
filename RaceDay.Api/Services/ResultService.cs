@@ -12,11 +12,7 @@ public interface IResultService
     Task<ServiceResult<IReadOnlyList<ResultDto>>> GetForEventAsync(int eventId);
 }
 
-/// <summary>
-/// Race results. The Organiser who owns an Event captures a finish time and
-/// position against each Enrolment (one Result per Enrolment). Participants view
-/// their own results; Organisers view results for their events.
-/// </summary>
+// Race results.
 public class ResultService : IResultService
 {
     private readonly RaceDayDbContext _db;

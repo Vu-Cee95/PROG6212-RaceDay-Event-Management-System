@@ -6,7 +6,7 @@ using RaceDay.Contracts;
 
 namespace RaceDay.Api.Tests;
 
-/// <summary>Organisers define categories for their own events; both roles can view them.</summary>
+// Organisers define categories for their own events; both roles can view them.
 public class CategoryTests : IClassFixture<RaceDayApiFactory>
 {
     private readonly RaceDayApiFactory _factory;

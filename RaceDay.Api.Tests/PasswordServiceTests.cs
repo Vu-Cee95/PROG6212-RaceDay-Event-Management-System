@@ -2,7 +2,7 @@ using RaceDay.Api.Services;
 
 namespace RaceDay.Api.Tests;
 
-/// <summary>Pure unit tests for the password hashing service.</summary>
+// Pure unit tests for the password hashing service.
 public class PasswordServiceTests
 {
     private readonly PasswordService _service = new();

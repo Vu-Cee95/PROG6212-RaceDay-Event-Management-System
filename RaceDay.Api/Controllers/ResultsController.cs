@@ -7,7 +7,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace RaceDay.Api.Controllers;
 
-/// <summary>Race results: Organisers capture finish times and positions, Participants view their history.</summary>
+// Race results: Organisers capture finish times and positions, Participants view their history.
 [ApiController]
 [Tags("Results")]
 [Produces("application/json")]
@@ -20,11 +20,7 @@ public class ResultsController : ControllerBase
         _results = results;
     }
 
-    /// <summary>Capture a Participant's result.</summary>
-    /// <remarks>
-    /// Organiser only, for enrolments of events the Organiser created. Records the finish time
-    /// (hh:mm:ss) and finishing position. One result per enrolment (409 if already captured).
-    /// </remarks>
+    // Capture a Participant's result.
     [HttpPost("api/enrolments/{enrolmentId:int}/result")]
     [RequireRole(UserRole.Organiser)]
     [SwaggerOperation(Summary = "Capture a Participant's finish time and position",
@@ -41,8 +37,7 @@ public class ResultsController : ControllerBase
         return result.ToActionResult(this);
     }
 
-    /// <summary>View a Participant's own results.</summary>
-    /// <remarks>Participant only. The userId must be the logged-in user's own Id (otherwise 403).</remarks>
+    // View a Participant's own results.
     [HttpGet("api/users/{userId:int}/results")]
     [RequireRole(UserRole.Participant)]
     [SwaggerOperation(Summary = "Retrieve a Participant's own race results and history",
@@ -56,8 +51,7 @@ public class ResultsController : ControllerBase
         return result.ToActionResult(this);
     }
 
-    /// <summary>View all results for an event.</summary>
-    /// <remarks>Organiser only, for events the Organiser created. Ordered by finishing position.</remarks>
+    // View all results for an event.
     [HttpGet("api/events/{eventId:int}/results")]
     [RequireRole(UserRole.Organiser)]
     [SwaggerOperation(Summary = "Retrieve all captured results for an event",

@@ -12,10 +12,7 @@ public interface IAuthService
     void Logout();
 }
 
-/// <summary>
-/// Registration, login and logout. On success the user's Id and Role are written
-/// to the server-side session so that later requests can be authorised.
-/// </summary>
+// Registration, login and logout.
 public class AuthService : IAuthService
 {
     private readonly RaceDayDbContext _db;

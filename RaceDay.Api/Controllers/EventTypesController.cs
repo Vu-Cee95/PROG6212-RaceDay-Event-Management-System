@@ -5,7 +5,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace RaceDay.Api.Controllers;
 
-/// <summary>Lookup of event types (Run, Walk, Cycle) used when creating events.</summary>
+// Lookup of event types (Run, Walk, Cycle) used when creating events.
 [ApiController]
 [Route("api/eventtypes")]
 [Tags("Event Types")]
@@ -19,8 +19,7 @@ public class EventTypesController : ControllerBase
         _events = events;
     }
 
-    /// <summary>List event types.</summary>
-    /// <remarks>Public lookup. Returns the EventTypeId values accepted by POST/PUT /api/events.</remarks>
+    // List event types.
     [HttpGet]
     [SwaggerOperation(Summary = "List all event types (Run, Walk, Cycle)",
         Description = "Public. Supporting lookup so clients know which eventTypeId to send when creating or updating an event.")]

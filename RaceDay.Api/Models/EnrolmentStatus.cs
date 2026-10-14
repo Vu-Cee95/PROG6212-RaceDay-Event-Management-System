@@ -1,8 +1,6 @@
 namespace RaceDay.Api.Models;
 
-/// <summary>
-/// Allowed values for Enrolments.Status (NVARCHAR(20), default 'Pending').
-/// </summary>
+// Allowed values for Enrolments.Status (NVARCHAR(20), default 'Pending').
 public static class EnrolmentStatus
 {
     public const string Pending = "Pending";
