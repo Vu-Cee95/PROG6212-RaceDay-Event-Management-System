@@ -1,14 +1,18 @@
 name: Part 2 - Build and Test API
 
+# Runs on every push and pull request. Restores, builds and runs the full
+# xUnit suite, then validates the repository structure required by the brief.
 on:
   push:
     branches: ["**"]
   pull_request:
 
+
 jobs:
   build-and-test:
     name: Build, test and validate structure
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,3 +34,127 @@ jobs:
           --configuration Release
           --no-build
           --verbosity normal
+          --logger "trx;LogFileName=test-results.trx"
+          --results-directory TestResults
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults
+
+      - name: Validate repository structure
+        run: |
+          set -e
+          echo "Checking Part 1 planning documents ..."
+          test -d docs
+          test -f docs/RaceDay_ERD.pdf
+          test -f docs/RaceDay_API_Endpoint_Plan.pdf
+          test -f docs/RaceDay_Database.sql
+          echo "Checking Part 2 solution layout ..."
+          test -f RaceDay.sln
+          test -f RaceDay.Api/RaceDay.Api.csproj
+          test -f RaceDay.Api/Program.cs
+          test -d RaceDay.Api/Controllers
+          test -d RaceDay.Api/Data
+          test -d RaceDay.Api/Filters
+          test -d RaceDay.Api/Models
+          test -d RaceDay.Api/Data/Migrations
+          test -f RaceDay.Contracts/RaceDay.Contracts.csproj
+          test -f RaceDay.Contracts/Dtos.cs
+          test -f RaceDay.Api.Tests/RaceDay.Api.Tests.csproj
+          test -f README.md
+          echo "Repository structure is valid."
+
+  smoke-test:
+    name: Migrate, seed and smoke-test against SQL Server
+    runs-on: ubuntu-latest
+    needs: build-and-test
+
+    # A throw-away SQL Server so the real EF Core migration and seeder run on a clean machine.
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: "Y"
+          MSSQL_SA_PASSWORD: RaceDay_Ci_P@ssw0rd1   # throw-away CI password, must match SA_PASSWORD below
+        ports:
+          - 1433:1433
+
+    env:
+      SA_PASSWORD: RaceDay_Ci_P@ssw0rd1
+      API_URL: http://localhost:5261
+      ConnectionStrings__DefaultConnection: >-
+        Server=localhost,1433;Database=RaceDayDb;User Id=sa;Password=RaceDay_Ci_P@ssw0rd1;TrustServerCertificate=True;MultipleActiveResultSets=True;
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build API
+        run: dotnet build RaceDay.Api/RaceDay.Api.csproj --configuration Release
+
+      - name: Wait for SQL Server
+        run: |
+          for i in $(seq 1 30); do
+            if docker exec "${{ job.services.sqlserver.id }}" bash -c \
+              "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P '$SA_PASSWORD' -Q 'SELECT 1' -b -o /dev/null 2>/dev/null \
+               || /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P '$SA_PASSWORD' -Q 'SELECT 1' -b -o /dev/null"; then
+              echo "SQL Server is ready."
+              exit 0
+            fi
+            echo "Waiting for SQL Server ($i/30) ..."
+            sleep 3
+          done
+          echo "SQL Server did not become ready in time." >&2
+          exit 1
+
+      - name: Start API (applies migration and seeds data)
+        run: |
+          nohup dotnet run --project RaceDay.Api/RaceDay.Api.csproj --configuration Release --no-build \
+            --urls "$API_URL" > api.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fs "$API_URL/health" > /dev/null; then
+              echo "API is up."
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "API did not start in time. Log:" >&2
+          cat api.log >&2
+          exit 1
+
+      - name: Smoke-test endpoints
+        run: |
+          set -e
+          echo "Health:"
+          curl -fs "$API_URL/health"; echo
+
+          echo "Swagger document lists the login endpoint:"
+          curl -fs "$API_URL/swagger/v1/swagger.json" | grep -q '"/api/auth/login"'
+
+          echo "Seeded events are visible publicly:"
+          count=$(curl -fs "$API_URL/api/events" | jq 'length')
+          test "$count" -eq 3
+
+          echo "Protected endpoint rejects anonymous callers with 401:"
+          status=$(curl -s -o /dev/null -w '%{http_code}' "$API_URL/api/users/profile")
+          test "$status" -eq 401
+
+          echo "Seeded organiser can log in and reach a protected endpoint:"
+          curl -fs -c cookies.txt -H 'Content-Type: application/json' \
+            -d '{"email":"thabo.mokoena@raceday.co.za","password":"Password123!"}' \
+            "$API_URL/api/auth/login" | jq -e '.role == "Organiser"'
+          curl -fs -b cookies.txt "$API_URL/api/events/mine" | jq -e 'length == 2'
+
+          echo "Smoke test passed."
+
+      - name: Show API log
+        if: always()
+        run: cat api.log || true
