@@ -54,14 +54,18 @@ RaceDay
 |   |-- Models/                          Entity classes (one per ERD entity)
 |   |-- Services/                        Business logic (Auth, Profile, Event, Category, Enrolment, Result)
 |   |-- appsettings.json                 SQL Server connection string
-|   `-- Program.cs                       DI, session, Swagger, migrate + seed on startup
+|   |-- RaceDay.Api.http                 Ready-to-send sample requests (Visual Studio / VS Code REST Client)
+|   `-- Program.cs                       DI, session, Swagger, error handling, migrate + seed on startup
 |-- RaceDay.Contracts/                   Shared DTOs (used by the API now and by the MVC app in Part 3)
 |   `-- Dtos.cs
-|-- RaceDay.Api.Tests/                   xUnit test project (139 tests)
+|-- RaceDay.Api.Tests/                   xUnit test project (144 tests)
 |-- RaceDay.sln
-|-- .github/workflows/
-|   |-- part1-ci.yml                     Part 1 - validates the docs folder
-|   `-- part2-ci.yml                     Part 2 - restore, build, run tests, validate structure
+|-- .editorconfig                        Shared C# formatting rules
+|-- .github/
+|   |-- dependabot.yml                   Weekly NuGet / monthly Actions update PRs
+|   `-- workflows/
+|       |-- part1-ci.yml                 Part 1 - validates the docs folder
+|       `-- part2-ci.yml                 Part 2 - build, test, validate structure, smoke-test against SQL Server
 `-- README.md
 ```
 
@@ -178,6 +182,9 @@ Or open `RaceDay.sln` in Visual Studio, set `RaceDay.Api` as the startup project
 The API listens on `https://localhost:7166` and `http://localhost:5261` and opens **Swagger UI** at
 `https://localhost:7166/swagger`. On the first run it creates and seeds the database.
 
+A health check is at `/health`. You can also open `RaceDay.Api/RaceDay.Api.http` in Visual Studio
+and click **Send Request** on any sample (login first so the session cookie is kept).
+
 ### Authentication and Role-Based Access
 
 **Registration** (`POST /api/auth/register`) - the user supplies email, password, full name and a role of
@@ -220,6 +227,7 @@ response codes. Roles: **None** = public, **Any** = any logged-in user.
 |--------|-------|-------------|------|--------------|-----------|
 | POST | `/api/auth/register` | Register a new Organiser or Participant | None | `{ email, password, fullName, role }` | 201, 400 |
 | POST | `/api/auth/login` | Log in and start a session | None | `{ email, password }` | 200, 400, 401 |
+| GET | `/health` | Liveness probe *(addition)* | None | - | 200 |
 | POST | `/api/auth/logout` | End the session *(addition)* | None | - | 204 |
 | GET | `/api/users/profile` | Get the logged-in user's profile | Any | - | 200, 401 |
 | PUT | `/api/users/profile` | Update own name / profile picture URL | Any | `{ fullName, profilePictureUrl }` | 200, 400, 401 |
@@ -248,6 +256,7 @@ routes changed):
 
 | Addition | Reason |
 |----------|--------|
+| `GET /health` | Simple up/down check used by CI and anyone hosting the API. |
 | `POST /api/auth/logout` | The brief requires users to be able to end their session; the plan only listed register and login. |
 | `GET /api/eventtypes` | The planned event body uses `eventTypeId`; clients need a lookup to know the valid ids. |
 | `GET /api/events/mine` | Lets an Organiser list only their own events (needed for the Part 3 dashboard). |
@@ -280,7 +289,7 @@ tooling - log in once and the cookie is sent automatically. Suggested walkthroug
 8. Log in as the Participant again: `GET /api/users/{yourUserId}/results`.
 
 ### Unit Testing
-The `RaceDay.Api.Tests` project contains **139 tests** (xUnit). Integration tests host the real API with
+The `RaceDay.Api.Tests` project contains **144 tests** (xUnit). Integration tests host the real API with
 `WebApplicationFactory<Program>`, replacing SQL Server with an isolated EF Core InMemory database seeded with the
 same sample data, so controllers, filters, session handling and services are exercised end to end. Pure unit
 tests cover the password service and the authorisation filters.
@@ -298,6 +307,7 @@ Run them with `dotnet test RaceDay.sln` or from Visual Studio **Test > Test Expl
 | `CategoryTests` | Category CRUD restricted to the owning organiser; public listing; duplicate names and categories with enrolments are rejected. |
 | `EnrolmentTests` | Participants enrol and the Participant-Event-Category link is recorded correctly; duplicate (409), wrong category (400), wrong role (403), anonymous (401); own-only listing; organiser view and status management scoped to own events. |
 | `ResultTests` | Organisers capture results for their own events (one per enrolment, validation, 403 for others); participants view only their own history with finish time and position; event results ordered by position. |
+| `ApiBehaviourTests` | `/health` returns Healthy; unknown routes return 404; bad JSON and validation errors use the same `ApiError` shape; the Swagger document lists every tag. |
 
 ### CI/CD
 `.github/workflows/part2-ci.yml` runs on every push and pull request:
@@ -306,8 +316,15 @@ Run them with `dotnet test RaceDay.sln` or from Visual Studio **Test > Test Expl
 2. `dotnet restore` / `dotnet build --configuration Release`
 3. `dotnet test` (results uploaded as a TRX artifact)
 4. Validate the repository structure (Part 1 docs and the Part 2 solution layout)
+5. Start a SQL Server container, run the API (migrate + seed), then hit `/health`, Swagger, public events, a 401 on a protected route, and a real Organiser login
 
-The Part 1 workflow (`part1-ci.yml`) continues to run alongside it.
+The Part 1 workflow (`part1-ci.yml`) continues to run alongside it. `.github/dependabot.yml` opens weekly NuGet / monthly Actions update pull requests so those builds stay green.
+
+### Troubleshooting
+- **SQL Server is not running:** start the default instance (`localhost`). The API creates `RaceDayDb` on first run.
+- **"file is locked by RaceDay.Api":** stop the running API (Ctrl+C or Shift+F5) before you build or test.
+- **Wrong database:** Part 1's SQL script uses `RaceDay`. The API uses `RaceDayDb` in `appsettings.json`.
+- **HTTPS certificate warning:** use the HTTP profile (`http://localhost:5261/swagger`) or trust the ASP.NET HTTPS cert.
 
 ### GitHub Actions Screenshot
 ![Part 2 green build](docs/screenshots/part2-ci-green-build.png)
