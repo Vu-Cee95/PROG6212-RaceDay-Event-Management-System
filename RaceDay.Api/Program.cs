@@ -36,6 +36,10 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IEnrolmentService, EnrolmentService>();
 builder.Services.AddScoped<IResultService, ResultService>();
 
+// ---------------- Health checks ----------------
+// Lightweight liveness probe used by the CI smoke step and by anyone hosting the API.
+builder.Services.AddHealthChecks();
+
 // ---------------- MVC ----------------
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
@@ -120,6 +124,7 @@ app.UseHttpsRedirection();
 app.UseSession();
 
 app.MapControllers();
+app.MapHealthChecks("/health");
 
 app.Run();
 
