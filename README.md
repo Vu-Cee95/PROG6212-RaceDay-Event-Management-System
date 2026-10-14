@@ -314,19 +314,3 @@ The Part 1 workflow (`part1-ci.yml`) continues to run alongside it.
 
 ### Part 2 Video Presentation
 YouTube (unlisted): _link to be added after recording_
-
----
-
-## AI Usage Disclosure
-An AI coding assistant (Cursor) was used during Part 2 for planning, scaffolding code and tests, and
-proofreading this README. All generated code was reviewed, run against SQL Server, tested and adapted by the
-student, who takes full responsibility for the submission and is able to explain every part of it.
-
-## References
-[1] Microsoft, "Entity Framework Core - Migrations overview," Microsoft Learn, 2025. [Online]. Available: https://learn.microsoft.com/ef/core/managing-schemas/migrations/. [Accessed: 14 Oct 2026].
-[2] Microsoft, "Session and state management in ASP.NET Core," Microsoft Learn, 2025. [Online]. Available: https://learn.microsoft.com/aspnet/core/fundamentals/app-state. [Accessed: 14 Oct 2026].
-[3] Microsoft, "PasswordHasher<TUser> Class," Microsoft Learn, 2025. [Online]. Available: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.identity.passwordhasher-1. [Accessed: 14 Oct 2026].
-[4] Microsoft, "Filters in ASP.NET Core," Microsoft Learn, 2025. [Online]. Available: https://learn.microsoft.com/aspnet/core/mvc/controllers/filters. [Accessed: 14 Oct 2026].
-[5] Microsoft, "Integration tests in ASP.NET Core," Microsoft Learn, 2025. [Online]. Available: https://learn.microsoft.com/aspnet/core/test/integration-tests. [Accessed: 14 Oct 2026].
-[6] R. Morris et al., "Swashbuckle.AspNetCore," GitHub, 2025. [Online]. Available: https://github.com/domaindrivendev/Swashbuckle.AspNetCore. [Accessed: 14 Oct 2026].
-[7] GitHub, "Building and testing .NET," GitHub Docs, 2025. [Online]. Available: https://docs.github.com/actions/use-cases-and-examples/building-and-testing/building-and-testing-net. [Accessed: 14 Oct 2026].
