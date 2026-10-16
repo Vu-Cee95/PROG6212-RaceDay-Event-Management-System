@@ -330,4 +330,4 @@ The Part 1 workflow (`part1-ci.yml`) continues to run alongside it. `.github/dep
 ![Part 2 green build](docs/screenshots/part2-ci-green-build.png)
 
 ### Part 2 Video Presentation
-YouTube (unlisted): _link to be added after recording_
+YouTube (unlisted): https://youtu.be/2Ek7E0Pz86g
