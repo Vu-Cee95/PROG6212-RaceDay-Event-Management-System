@@ -1,0 +1,65 @@
+@model List<EnrolmentDto>
+@{
+    ViewData["Title"] = "Results";
+    var events = (List<EventDto>)ViewBag.Events;
+    var selected = (int?)ViewBag.SelectedEventId;
+}
+<div class="page-wrap">
+    <partial name="_Alerts" />
+    <h1 class="page-title">Results</h1>
+    @if (events.Count == 0)
+    {
+        <p>Create an event first.</p>
+    }
+    else
+    {
+        <form method="get" class="mb-3" style="max-width:24rem">
+            <label class="form-label" for="eventId">Event</label>
+            <select class="form-select" id="eventId" name="eventId" onchange="this.form.submit()">
+                @foreach (var item in events)
+                {
+                    if (item.EventId == selected)
+                    {
+                        <option value="@item.EventId" selected>@item.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@item.EventId">@item.Name</option>
+                    }
+                }
+            </select>
+        </form>
+        <div class="sheet">
+            <table class="ops-table">
+                <thead>
+                    <tr>
+                        <th>Participant</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td data-label="Participant">@item.ParticipantName</td>
+                        <td data-label="Category">@item.CategoryName</td>
+                        <td data-label="Status"><partial name="_StatusChip" model="item.Status" /></td>
+                        <td data-label="Result">
+                            @if (item.HasResult)
+                            {
+                                <span>Captured</span>
+                            }
+                            else
+                            {
+                                <a class="btn btn-sm btn-tape" asp-action="CaptureResult" asp-route-enrolmentId="@item.EnrolmentId" asp-route-eventId="@selected">Capture result</a>
+                            }
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

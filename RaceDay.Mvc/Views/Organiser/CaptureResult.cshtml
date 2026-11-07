@@ -1,0 +1,35 @@
+@model CaptureResultVm
+@{
+    ViewData["Title"] = "Capture result";
+}
+<div class="page-wrap">
+    <h1 class="page-title">Capture result</h1>
+    <p class="page-lead">@Model.ParticipantName · @Model.EventName · @Model.CategoryName</p>
+    <div class="sheet" style="max-width:28rem">
+        <form asp-action="CaptureResult" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="EnrolmentId" />
+            <input type="hidden" asp-for="EventId" />
+            <input type="hidden" asp-for="ParticipantName" />
+            <input type="hidden" asp-for="EventName" />
+            <input type="hidden" asp-for="CategoryName" />
+            <div class="mb-3">
+                <label asp-for="FinishTime" class="form-label"></label>
+                <input asp-for="FinishTime" class="form-control" type="time" step="1" />
+                <span asp-validation-for="FinishTime" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="FinishingPosition" class="form-label"></label>
+                <input asp-for="FinishingPosition" class="form-control" />
+                <span asp-validation-for="FinishingPosition" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Notes" class="form-label"></label>
+                <input asp-for="Notes" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-tape">Save result</button>
+            <a class="btn btn-link" asp-action="Results" asp-route-eventId="@Model.EventId">Cancel</a>
+        </form>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
