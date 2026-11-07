@@ -1,0 +1,74 @@
+﻿@{
+    var role = Context.Session.GetString(SessionKeys.Role);
+    var userId = Context.Session.GetInt32(SessionKeys.UserId);
+    var displayName = Context.Session.GetString(SessionKeys.DisplayName);
+    var overHero = ViewData["OverHero"] as bool? == true;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@(ViewData["Title"] ?? "RaceDay")</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=IBM+Plex+Mono:wght@500&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="@(overHero ? "has-hero" : null)">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="ops-bar">
+        <nav class="navbar navbar-expand-lg ops-nav" aria-label="RaceDay">
+            <div class="container-fluid ops-nav__inner">
+                <a class="navbar-brand ops-brand" asp-controller="Home" asp-action="Index">RaceDay</a>
+                <button class="navbar-toggler ops-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#opsNav" aria-controls="opsNav" aria-expanded="false" aria-label="Open menu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="opsNav">
+                    <ul class="navbar-nav me-auto">
+                        @if (userId is null)
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Start list</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Auth" asp-action="Login">Log in</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Auth" asp-action="Register">Register</a></li>
+                        }
+                        else if (string.Equals(role, "Organiser", StringComparison.OrdinalIgnoreCase))
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Organiser" asp-action="Index">Desk</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Organiser" asp-action="Events">Events</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Organiser" asp-action="Enrolments">Enrolments</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Organiser" asp-action="Results">Results</a></li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="Index">Events</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="MyEvents">My events</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="MyResults">My results</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="Profile">Profile</a></li>
+                        }
+                    </ul>
+                    @if (userId is not null)
+                    {
+                        <form asp-controller="Auth" asp-action="Logout" method="post" class="ops-logout">
+                            @Html.AntiForgeryToken()
+                            <span class="ops-user">@displayName</span>
+                            <button type="submit" class="btn btn-sm btn-tape">Log out</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main id="main">
+        @RenderBody()
+    </main>
+    <footer class="ops-foot">
+        <div class="container-fluid">RaceDay operations. MVC talks to the API. The API talks to SQL Server and Azure.</div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

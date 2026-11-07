@@ -1,0 +1,12 @@
+@model string
+@{
+    var status = Model ?? "Unknown";
+    var css = status.ToLowerInvariant() switch
+    {
+        "confirmed" => "status-confirmed",
+        "pending" => "status-pending",
+        "cancelled" => "status-cancelled",
+        _ => "status-cancelled"
+    };
+}
+<span class="status-chip @css">@status</span>
