@@ -14,6 +14,7 @@ public interface IEventService
     Task<ServiceResult<EventDto>> CreateAsync(CreateEventRequest request);
     Task<ServiceResult<EventDto>> UpdateAsync(int eventId, UpdateEventRequest request);
     Task<ServiceResult<object>> DeleteAsync(int eventId);
+    Task<ServiceResult<EventDto>> SetBannerAsync(int eventId, string imageUrl);
 }
 
 // Event management. Anyone may read events; only Organisers may create them and only the owning Organiser may update or delete them.
@@ -138,6 +139,24 @@ public class EventService : IEventService
         await _db.SaveChangesAsync();
 
         return ServiceResult<object>.NoContent();
+    }
+
+    public async Task<ServiceResult<EventDto>> SetBannerAsync(int eventId, string imageUrl)
+    {
+        var entity = await _db.Events.FindAsync(eventId);
+        if (entity is null)
+        {
+            return ServiceResult<EventDto>.NotFound($"Event {eventId} was not found.");
+        }
+
+        if (entity.OrganiserId != _currentUser.UserId)
+        {
+            return ServiceResult<EventDto>.Forbidden("You can only update events that you created.");
+        }
+
+        entity.BannerImageUrl = imageUrl;
+        await _db.SaveChangesAsync();
+        return await GetByIdAsync(eventId);
     }
 
     private async Task<string?> ValidateAsync(CreateEventRequest request)

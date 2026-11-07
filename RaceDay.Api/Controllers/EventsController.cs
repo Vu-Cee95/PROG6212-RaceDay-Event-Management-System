@@ -96,4 +96,38 @@ public class EventsController : ControllerBase
         var result = await _events.DeleteAsync(eventId);
         return result.ToActionResult(this);
     }
+
+    // Upload an event banner. The file goes MVC -> this API -> Azure Blob Storage.
+    [HttpPost("{eventId:int}/banner")]
+    [RequireRole(UserRole.Organiser)]
+    [RequestSizeLimit(ImageUpload.MaxBytes + 1024)]
+    [Consumes("multipart/form-data")]
+    [SwaggerOperation(Summary = "Upload an event banner image",
+        Description = "Organiser only; the caller must own the event. Multipart field name: file. The API uploads to Azure Blob Storage and stores the URL.")]
+    [ProducesResponseType(typeof(EventDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiError), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiError), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiError), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ApiError), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UploadBanner(int eventId, IFormFile file, [FromServices] IBlobStorageService blobs)
+    {
+        var problem = ImageUpload.Validate(file);
+        if (problem is not null)
+        {
+            return BadRequest(new ApiError { Message = problem });
+        }
+
+        string url;
+        try
+        {
+            url = await blobs.UploadAsync(file, "event-banners");
+        }
+        catch (InvalidOperationException ex)
+        {
+            return StatusCode(StatusCodes.Status503ServiceUnavailable, new ApiError { Message = ex.Message });
+        }
+
+        var result = await _events.SetBannerAsync(eventId, url);
+        return result.ToActionResult(this);
+    }
 }
