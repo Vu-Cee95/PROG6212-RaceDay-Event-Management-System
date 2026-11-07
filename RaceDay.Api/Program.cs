@@ -111,8 +111,7 @@ app.UseSwaggerUI(options =>
     options.DisplayRequestDuration();
 });
 
-var listenUrls = Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? string.Empty;
-if (listenUrls.Contains("https://", StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(listenUrls))
+if (app.Configuration.GetValue("UseHttpsRedirection", false))
 {
     app.UseHttpsRedirection();
 }
