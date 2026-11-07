@@ -1,0 +1,42 @@
+@model ProfileVm
+@{
+    ViewData["Title"] = "Profile";
+    var initials = string.Concat(Model.FullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(p => p[0]));
+}
+<div class="page-wrap">
+    <partial name="_Alerts" />
+    <h1 class="page-title">Profile</h1>
+    <div class="sheet" style="max-width:32rem">
+        @if (!string.IsNullOrWhiteSpace(Model.ProfilePictureUrl))
+        {
+            <img class="avatar mb-3" src="@Model.ProfilePictureUrl" alt="Profile picture of @Model.FullName" />
+        }
+        else
+        {
+            <div class="avatar mb-3" aria-hidden="true">@initials</div>
+        }
+        <form asp-action="Profile" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProfilePictureUrl" />
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input class="form-control" value="@Model.Email" readonly />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Role</label>
+                <input class="form-control" value="@Model.Role" readonly />
+            </div>
+            <div class="mb-3">
+                <label asp-for="FullName" class="form-label"></label>
+                <input asp-for="FullName" class="form-control" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Picture" class="form-label">Profile picture</label>
+                <input asp-for="Picture" class="form-control" type="file" accept="image/jpeg,image/png,image/webp,image/gif" />
+            </div>
+            <button type="submit" class="btn btn-tape">Save</button>
+        </form>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
