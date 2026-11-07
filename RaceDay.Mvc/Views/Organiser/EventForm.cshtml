@@ -1,0 +1,51 @@
+@model EventFormVm
+@{
+    ViewData["Title"] = Model.EventId.HasValue ? "Edit event" : "Create event";
+}
+<div class="page-wrap">
+    <h1 class="page-title">@ViewData["Title"]</h1>
+    <div class="sheet" style="max-width:40rem">
+        <form asp-action="@(Model.EventId.HasValue ? "EditEvent" : "CreateEvent")" asp-route-id="@Model.EventId" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label asp-for="EventDate" class="form-label"></label>
+                <input asp-for="EventDate" class="form-control" type="date" />
+                <span asp-validation-for="EventDate" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Location" class="form-label"></label>
+                <input asp-for="Location" class="form-control" />
+                <span asp-validation-for="Location" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Distance" class="form-label"></label>
+                <input asp-for="Distance" class="form-control" />
+                <span asp-validation-for="Distance" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="EventTypeId" class="form-label"></label>
+                <select asp-for="EventTypeId" asp-items="Model.EventTypes" class="form-select"></select>
+            </div>
+            @if (!string.IsNullOrWhiteSpace(Model.BannerImageUrl))
+            {
+                <p><img src="@Model.BannerImageUrl" alt="Current banner" class="img-fluid" style="max-height:180px" /></p>
+            }
+            <div class="mb-3">
+                <label asp-for="Banner" class="form-label">Event banner</label>
+                <input asp-for="Banner" class="form-control" type="file" accept="image/jpeg,image/png,image/webp,image/gif" />
+            </div>
+            <button type="submit" class="btn btn-tape">Save</button>
+            <a class="btn btn-link" asp-action="Events">Cancel</a>
+        </form>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

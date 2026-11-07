@@ -1,0 +1,36 @@
+@model List<EventDto>
+@{
+    ViewData["Title"] = "Events";
+}
+<div class="page-wrap">
+    <partial name="_Alerts" />
+    <h1 class="page-title">Events</h1>
+    <p><a class="btn btn-tape" asp-action="CreateEvent">Create event</a></p>
+    @if (Model.Count == 0)
+    {
+        <p>No events yet.</p>
+    }
+    else
+    {
+        <div class="start-list">
+            @foreach (var item in Model)
+            {
+                <article class="start-row">
+                    <div class="start-row__bib">@item.Distance.ToString("0.#")</div>
+                    <div>
+                        <h2>@item.Name</h2>
+                        <p class="start-meta mb-0">@item.EventType · @item.Location · <span class="mono">@item.EventDate.ToString("dd MMM yyyy")</span> · @item.EnrolmentCount enrolled</p>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a class="btn btn-asphalt" asp-action="EditEvent" asp-route-id="@item.EventId">Edit</a>
+                        <a class="btn btn-asphalt" asp-action="Categories" asp-route-eventId="@item.EventId">Categories</a>
+                        <form asp-action="DeleteEvent" asp-route-id="@item.EventId" method="post" onsubmit="return confirm('Delete this event?');">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-outline-danger">Delete</button>
+                        </form>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</div>
