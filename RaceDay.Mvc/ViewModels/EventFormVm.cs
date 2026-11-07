@@ -78,6 +78,7 @@ public class CaptureResultVm
     public string CategoryName { get; set; } = string.Empty;
 
     [Required, Display(Name = "Finish time")]
+    [DisplayFormat(DataFormatString = @"hh\:mm\:ss", ApplyFormatInEditMode = true)]
     public TimeSpan FinishTime { get; set; } = new(1, 30, 0);
 
     [Range(1, int.MaxValue), Display(Name = "Finishing position")]

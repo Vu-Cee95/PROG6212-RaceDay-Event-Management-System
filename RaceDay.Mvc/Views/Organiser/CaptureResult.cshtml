@@ -15,7 +15,8 @@
             <input type="hidden" asp-for="CategoryName" />
             <div class="mb-3">
                 <label asp-for="FinishTime" class="form-label"></label>
-                <input asp-for="FinishTime" class="form-control" type="time" step="1" />
+                <input asp-for="FinishTime" class="form-control" type="text" inputmode="numeric" placeholder="hh:mm:ss" />
+                <div class="form-text">Chip time as hours, minutes and seconds, for example 01:30:00.</div>
                 <span asp-validation-for="FinishTime" class="text-danger"></span>
             </div>
             <div class="mb-3">

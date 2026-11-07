@@ -5,7 +5,6 @@
     var upcoming = Model.Count(e => e.EventDate.Date >= DateTime.Today);
 }
 <div class="page-wrap">
-    <partial name="_Alerts" />
     <h1 class="page-title">Desk</h1>
     <p class="page-lead">Your events, fields and results. Nothing here talks to the database except through the API.</p>
     <div class="stat-grid">
