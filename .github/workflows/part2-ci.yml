@@ -64,6 +64,11 @@ jobs:
           test -f RaceDay.Contracts/RaceDay.Contracts.csproj
           test -f RaceDay.Contracts/Dtos.cs
           test -f RaceDay.Api.Tests/RaceDay.Api.Tests.csproj
+          test -f RaceDay.Mvc/RaceDay.Mvc.csproj
+          test -f RaceDay.Mvc/Program.cs
+          test -f RaceDay.Mvc/Dockerfile
+          test -d RaceDay.Mvc/Controllers
+          test -d RaceDay.Mvc/Views
           test -f README.md
           echo "Repository structure is valid."
 
