@@ -1,0 +1,26 @@
+@model LoginVm
+@{
+    ViewData["Title"] = "Log in";
+}
+<div class="page-wrap">
+    <div class="sheet auth-card">
+        <h1 class="page-title">Log in</h1>
+        <p class="page-lead">Use your RaceDay account. Organisers land on the desk; participants land on the start list.</p>
+        <form asp-action="Login" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" autocomplete="username" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" autocomplete="current-password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-tape">Log in</button>
+            <a class="btn btn-link" asp-action="Register">Register</a>
+        </form>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
