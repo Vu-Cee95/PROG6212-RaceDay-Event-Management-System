@@ -16,7 +16,7 @@ The system is built progressively across three parts:
 |------|-------------|--------|
 | 1 | System planning: ERD, API endpoint plan, SQL database script | Complete - see [Part 1](#part-1---system-planning-and-database) |
 | 2 | RESTful API (ASP.NET Core Web API, EF Core Code-First, session auth, Swagger, unit tests, CI/CD) | Complete - see [Part 2](#part-2---restful-api-development) |
-| 3 | MVC web application, Azure Blob Storage, Docker | Not started |
+| 3 | MVC web application, Azure Blob Storage, Docker | In progress - see [Part 3](#part-3---mvc-web-application) |
 
 ## User Roles
 
@@ -58,14 +58,21 @@ RaceDay
 |   `-- Program.cs                       DI, session, Swagger, error handling, migrate + seed on startup
 |-- RaceDay.Contracts/                   Shared DTOs (used by the API now and by the MVC app in Part 3)
 |   `-- Dtos.cs
-|-- RaceDay.Api.Tests/                   xUnit test project (144 tests)
+|-- RaceDay.Api.Tests/                   xUnit test project (API, including Blob upload)
+|-- RaceDay.Mvc/                         Part 3 - ASP.NET Core MVC front end
+|   |-- Controllers/                     Auth, Home, Organiser, Participant
+|   |-- Services/                        RaceDayApiClient (forwards `.RaceDay.Session`)
+|   |-- Views/
+|   |-- wwwroot/css/site.css             RaceDay theme + CSS parallax
+|   |-- wwwroot/img/                     Free licensed photos (see CREDITS.md)
+|   `-- Dockerfile                       Multi-stage .NET 10 Linux image
 |-- RaceDay.sln
 |-- .editorconfig                        Shared C# formatting rules
 |-- .github/
 |   |-- dependabot.yml                   Weekly NuGet / monthly Actions update PRs
 |   `-- workflows/
 |       |-- part1-ci.yml                 Part 1 - validates the docs folder
-|       `-- part2-ci.yml                 Part 2 - build, test, validate structure, smoke-test against SQL Server
+|       `-- part2-ci.yml                 Build API + MVC, test, validate structure, smoke-test against SQL Server
 `-- README.md
 ```
 
@@ -331,3 +338,44 @@ The Part 1 workflow (`part1-ci.yml`) continues to run alongside it. `.github/dep
 
 ### Part 2 Video Presentation
 YouTube (unlisted): https://youtu.be/2Ek7E0Pz86g
+
+---
+
+## Part 3 - MVC Web Application
+
+RaceDay.Mvc is the website. It never opens SQL Server or Azure. Every data action is an HTTP call to RaceDay.Api. The API uploads files to Azure Blob Storage and stores the URL.
+
+### How to run locally
+
+1. Start the API: `dotnet run --project RaceDay.Api --urls http://localhost:5261`
+2. Start MVC: `dotnet run --project RaceDay.Mvc --urls http://localhost:5284`
+3. Open http://localhost:5284
+
+Seed logins (password `Password123!`):
+
+- Organiser: `thabo.mokoena@raceday.co.za`
+- Participant: `lwando.dlamini@gmail.com`
+
+### Azure Blob Storage
+
+Set the connection string with user secrets on the API project (do not commit it):
+
+```
+dotnet user-secrets set "AzureBlobStorage:ConnectionString" "<your-connection-string>" --project RaceDay.Api
+```
+
+Container name: `raceday-images`. Upload path: MVC multipart form -> `POST /api/events/{id}/banner` or `POST /api/users/profile/picture` -> Azure -> URL saved on the event or user.
+
+### Docker (MVC only; API stays on the Windows host)
+
+```
+dotnet run --project RaceDay.Api --urls http://0.0.0.0:5000
+docker build -f RaceDay.Mvc/Dockerfile -t raceday-mvc:part3 .
+docker run -d --name raceday-mvc -p 8080:8080 -e ApiSettings__BaseUrl=http://host.docker.internal:5000/ raceday-mvc:part3
+```
+
+Then open http://localhost:8080. Stop the Visual Studio MVC process first so you can prove the container is serving the site.
+
+### Authentication flow
+
+MVC session stores `UserId`, `Role`, `DisplayName` and the API's `.RaceDay.Session` cookie. Later API calls send that cookie. Logout calls the API then clears the MVC session.
