@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceDay.Contracts", "RaceDa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceDay.Api.Tests", "RaceDay.Api.Tests\RaceDay.Api.Tests.csproj", "{AF58CBC8-2E74-4458-9DC4-76806023334E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceDay.Mvc", "RaceDay.Mvc\RaceDay.Mvc.csproj", "{44D61849-61DB-4B2D-AFE3-65A63FA07713}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{AF58CBC8-2E74-4458-9DC4-76806023334E}.Release|x64.Build.0 = Release|Any CPU
 		{AF58CBC8-2E74-4458-9DC4-76806023334E}.Release|x86.ActiveCfg = Release|Any CPU
 		{AF58CBC8-2E74-4458-9DC4-76806023334E}.Release|x86.Build.0 = Release|Any CPU
+		{44D61849-61DB-4B2D-AFE3-65A63FA07713}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44D61849-61DB-4B2D-AFE3-65A63FA07713}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44D61849-61DB-4B2D-AFE3-65A63FA07713}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{44D61849-61DB-4B2D-AFE3-65A63FA07713}.Debug|x64.Build.0 = Debug|Any CPU
+		{44D61849-61DB-4B2D-AFE3-65A63FA07713}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{44D61849-61DB-4B2D-AFE3-65A63FA07713}.Debug|x86.Build.0 = Debug|Any CPU
+		{44D61849-61DB-4B2D-AFE3-65A63FA07713}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44D61849-61DB-4B2D-AFE3-65A63FA07713}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44D61849-61DB-4B2D-AFE3-65A63FA07713}.Release|x64.ActiveCfg = Release|Any CPU
+		{44D61849-61DB-4B2D-AFE3-65A63FA07713}.Release|x64.Build.0 = Release|Any CPU
+		{44D61849-61DB-4B2D-AFE3-65A63FA07713}.Release|x86.ActiveCfg = Release|Any CPU
+		{44D61849-61DB-4B2D-AFE3-65A63FA07713}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
