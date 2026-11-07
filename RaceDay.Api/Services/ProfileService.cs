@@ -9,6 +9,7 @@ public interface IProfileService
 {
     Task<ServiceResult<ProfileDto>> GetMyProfileAsync();
     Task<ServiceResult<ProfileDto>> UpdateMyProfileAsync(UpdateProfileRequest request);
+    Task<ServiceResult<ProfileDto>> SetProfilePictureAsync(string imageUrl);
 }
 
 // Profile operations always act on the user identified by the session - a user can only ever read or update their own account.
@@ -44,6 +45,19 @@ public class ProfileService : IProfileService
             ? null
             : request.ProfilePictureUrl.Trim();
 
+        await _db.SaveChangesAsync();
+        return ServiceResult<ProfileDto>.Ok(ToDto(user));
+    }
+
+    public async Task<ServiceResult<ProfileDto>> SetProfilePictureAsync(string imageUrl)
+    {
+        var user = await _db.Users.FindAsync(_currentUser.UserId);
+        if (user is null)
+        {
+            return ServiceResult<ProfileDto>.NotFound("Your account could not be found.");
+        }
+
+        user.ProfilePictureUrl = imageUrl;
         await _db.SaveChangesAsync();
         return ServiceResult<ProfileDto>.Ok(ToDto(user));
     }

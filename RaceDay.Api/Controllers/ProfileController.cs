@@ -45,4 +45,35 @@ public class ProfileController : ControllerBase
         var result = await _profiles.UpdateMyProfileAsync(request);
         return result.ToActionResult(this);
     }
+
+    // Upload a profile picture. The file goes MVC -> this API -> Azure Blob Storage.
+    [HttpPost("picture")]
+    [RequestSizeLimit(ImageUpload.MaxBytes + 1024)]
+    [Consumes("multipart/form-data")]
+    [SwaggerOperation(Summary = "Upload the logged-in user's profile picture",
+        Description = "Any logged-in user. Multipart field name: file. The API uploads to Azure Blob Storage and stores the URL.")]
+    [ProducesResponseType(typeof(ProfileDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiError), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiError), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> UploadPicture(IFormFile file, [FromServices] IBlobStorageService blobs)
+    {
+        var problem = ImageUpload.Validate(file);
+        if (problem is not null)
+        {
+            return BadRequest(new ApiError { Message = problem });
+        }
+
+        string url;
+        try
+        {
+            url = await blobs.UploadAsync(file, "profile-pictures");
+        }
+        catch (InvalidOperationException ex)
+        {
+            return StatusCode(StatusCodes.Status503ServiceUnavailable, new ApiError { Message = ex.Message });
+        }
+
+        var result = await _profiles.SetProfilePictureAsync(url);
+        return result.ToActionResult(this);
+    }
 }
