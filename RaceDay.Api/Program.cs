@@ -31,6 +31,7 @@ builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IEnrolmentService, EnrolmentService>();
 builder.Services.AddScoped<IResultService, ResultService>();
+builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
 
 // /health - used by CI and to check the API is up
 builder.Services.AddHealthChecks();
@@ -110,7 +111,11 @@ app.UseSwaggerUI(options =>
     options.DisplayRequestDuration();
 });
 
-app.UseHttpsRedirection();
+var listenUrls = Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? string.Empty;
+if (listenUrls.Contains("https://", StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(listenUrls))
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseSession();
 
