@@ -1,0 +1,40 @@
+@model List<ResultDto>
+@{
+    ViewData["Title"] = "My results";
+}
+<div class="page-wrap">
+    <partial name="_Alerts" />
+    <h1 class="page-title">My results</h1>
+    @if (Model.Count == 0)
+    {
+        <p>No official times yet. They appear here after an organiser captures your result.</p>
+    }
+    else
+    {
+        <div class="sheet">
+            <table class="ops-table">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Time</th>
+                        <th>Position</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td data-label="Event">@item.EventName</td>
+                        <td data-label="Date" class="mono">@item.EventDate.ToString("dd MMM yyyy")</td>
+                        <td data-label="Category">@item.CategoryName</td>
+                        <td data-label="Time" class="mono">@(item.FinishTime?.ToString(@"hh\:mm\:ss") ?? "-")</td>
+                        <td data-label="Position" class="mono">@PositionText.Format(item.FinishingPosition, item.TotalFinishers)</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
