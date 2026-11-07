@@ -1,0 +1,53 @@
+@model List<EventDto>
+@{
+    ViewData["Title"] = "Organiser desk";
+    var totalEnrolments = Model.Sum(e => e.EnrolmentCount);
+    var upcoming = Model.Count(e => e.EventDate.Date >= DateTime.Today);
+}
+<div class="page-wrap">
+    <partial name="_Alerts" />
+    <h1 class="page-title">Desk</h1>
+    <p class="page-lead">Your events, fields and results. Nothing here talks to the database except through the API.</p>
+    <div class="stat-grid">
+        <div class="stat"><span>Events</span><strong>@Model.Count</strong></div>
+        <div class="stat"><span>Upcoming</span><strong>@upcoming</strong></div>
+        <div class="stat"><span>Enrolments</span><strong>@totalEnrolments</strong></div>
+    </div>
+    <p><a class="btn btn-tape" asp-action="CreateEvent">Create event</a></p>
+    @if (Model.Count == 0)
+    {
+        <p>You have not created an event yet. Start with Create event.</p>
+    }
+    else
+    {
+        <div class="sheet">
+            <table class="ops-table">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Field</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td data-label="Event">@item.Name</td>
+                        <td data-label="Date" class="mono">@item.EventDate.ToString("dd MMM yyyy")</td>
+                        <td data-label="Type">@item.EventType</td>
+                        <td data-label="Field" class="mono">@item.EnrolmentCount</td>
+                        <td>
+                            <a asp-action="Categories" asp-route-eventId="@item.EventId">Categories</a>
+                            ·
+                            <a asp-action="Enrolments" asp-route-eventId="@item.EventId">Enrolments</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
