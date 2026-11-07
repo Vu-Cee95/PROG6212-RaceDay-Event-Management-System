@@ -1,0 +1,54 @@
+@model List<CategoryDto>
+@{
+    ViewData["Title"] = "Categories";
+    var eventDto = (EventDto)ViewBag.Event;
+}
+<div class="page-wrap">
+    <partial name="_Alerts" />
+    <h1 class="page-title">Categories</h1>
+    <p class="page-lead">@eventDto.Name</p>
+    <div class="sheet mb-3" style="max-width:32rem">
+        <form asp-action="CreateCategory" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="EventId" value="@eventDto.EventId" />
+            <div class="mb-3">
+                <label class="form-label" for="CategoryName">Category name</label>
+                <input class="form-control" id="CategoryName" name="CategoryName" required maxlength="50" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="Description">Description</label>
+                <input class="form-control" id="Description" name="Description" maxlength="100" />
+            </div>
+            <button type="submit" class="btn btn-tape">Add category</button>
+        </form>
+    </div>
+    @if (Model.Count == 0)
+    {
+        <p>No categories yet. Add at least one before participants can enter.</p>
+    }
+    else
+    {
+        <div class="sheet">
+            <table class="ops-table">
+                <thead><tr><th>Name</th><th>Description</th><th></th></tr></thead>
+                <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td data-label="Name">@item.CategoryName</td>
+                        <td data-label="Description">@item.Description</td>
+                        <td>
+                            <form asp-action="DeleteCategory" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="categoryId" value="@item.CategoryId" />
+                                <input type="hidden" name="eventId" value="@eventDto.EventId" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
