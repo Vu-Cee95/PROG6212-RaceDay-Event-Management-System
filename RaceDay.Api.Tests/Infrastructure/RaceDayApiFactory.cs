@@ -34,6 +34,14 @@ public class RaceDayApiFactory : WebApplicationFactory<Program>
             services.AddDbContext<RaceDayDbContext>(options =>
                 options.UseInMemoryDatabase(_databaseName));
 
+            var blobRegistrations = services.Where(d => d.ServiceType == typeof(IBlobStorageService)).ToList();
+            foreach (var descriptor in blobRegistrations)
+            {
+                services.Remove(descriptor);
+            }
+
+            services.AddSingleton<IBlobStorageService, FakeBlobStorageService>();
+
             using var provider = services.BuildServiceProvider();
             using var scope = provider.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<RaceDayDbContext>();
