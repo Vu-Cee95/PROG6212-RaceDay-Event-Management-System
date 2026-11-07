@@ -1,0 +1,41 @@
+@model EventDto
+@{
+    ViewData["Title"] = Model.Name;
+    var categories = (List<CategoryDto>)ViewBag.Categories;
+}
+<div class="page-wrap">
+    <partial name="_Alerts" />
+    <figure class="zoom-frame mb-3">
+        <img src="@EventImages.Url(Model)" alt="@Model.Name banner" width="1600" height="900" />
+    </figure>
+    <h1 class="page-title">@Model.Name</h1>
+    <p class="page-lead">@Model.EventType · @Model.Location · <span class="mono">@Model.EventDate.ToString("dd MMM yyyy")</span> · @Model.Distance.ToString("0.##") km</p>
+    @if (!string.IsNullOrWhiteSpace(Model.Description))
+    {
+        <p>@Model.Description</p>
+    }
+    <div class="sheet" style="max-width:32rem">
+        <h2 class="h4">Enter event</h2>
+        @if (categories.Count == 0)
+        {
+            <p>This event has no categories yet, so it cannot be entered.</p>
+        }
+        else
+        {
+            <form asp-action="EnterEvent" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="eventId" value="@Model.EventId" />
+                <div class="mb-3">
+                    <label class="form-label" for="categoryId">Category</label>
+                    <select class="form-select" id="categoryId" name="categoryId">
+                        @foreach (var category in categories)
+                        {
+                            <option value="@category.CategoryId">@category.CategoryName</option>
+                        }
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-tape">Enter event</button>
+            </form>
+        }
+    </div>
+</div>
