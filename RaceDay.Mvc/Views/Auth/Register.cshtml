@@ -2,36 +2,50 @@
 @{
     ViewData["Title"] = "Register";
 }
-<div class="page-wrap">
-    <div class="sheet auth-card">
-        <h1 class="page-title">Register</h1>
-        <form asp-action="Register" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="mb-3">
-                <label asp-for="FullName" class="form-label"></label>
-                <input asp-for="FullName" class="form-control" />
-                <span asp-validation-for="FullName" class="text-danger"></span>
+<section class="onboard">
+    <aside class="onboard__visual" aria-hidden="true">
+        <img src="~/img/trail-dust.jpg" alt="" width="1600" height="1200" />
+        <div class="onboard__veil"></div>
+        <p class="onboard__whisper">RaceDay</p>
+    </aside>
+    <div class="onboard__panel">
+        <div class="onboard__progress" aria-hidden="true">
+            <span class="is-active"></span><span class="is-active"></span>
+        </div>
+        <p class="onboard__step">Create your account</p>
+        <h1 class="page-title">Join the field</h1>
+        <p class="page-lead">Pick a role once. You can enter races or run the desk from the same login.</p>
+        <form asp-action="Register" method="post" class="onboard__form">
+            <div asp-validation-summary="ModelOnly" class="alert alert-rd-bad"></div>
+            <div class="field">
+                <label asp-for="FullName">Full name <span class="req" aria-hidden="true">*</span></label>
+                <input asp-for="FullName" class="form-control" required maxlength="100" />
+                <span asp-validation-for="FullName" class="field-error"></span>
             </div>
-            <div class="mb-3">
-                <label asp-for="Email" class="form-label"></label>
-                <input asp-for="Email" class="form-control" autocomplete="username" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+            <div class="field">
+                <label asp-for="Email">Email <span class="req" aria-hidden="true">*</span></label>
+                <input asp-for="Email" class="form-control" autocomplete="username" required />
+                <span asp-validation-for="Email" class="field-error"></span>
             </div>
-            <div class="mb-3">
-                <label asp-for="Password" class="form-label"></label>
-                <input asp-for="Password" class="form-control" autocomplete="new-password" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+            <div class="field">
+                <label asp-for="Password">Password <span class="req" aria-hidden="true">*</span></label>
+                <input asp-for="Password" class="form-control" autocomplete="new-password" required minlength="8" />
+                <span class="hint">At least 8 characters.</span>
+                <span asp-validation-for="Password" class="field-error"></span>
             </div>
-            <div class="mb-3">
-                <label asp-for="Role" class="form-label"></label>
+            <div class="field">
+                <label asp-for="Role">Role <span class="req" aria-hidden="true">*</span></label>
                 <select asp-for="Role" class="form-select">
                     <option value="Participant">Participant</option>
                     <option value="Organiser">Organiser</option>
                 </select>
+                <span class="hint">Participant enters races. Organiser runs the desk.</span>
             </div>
-            <button type="submit" class="btn btn-tape">Create account</button>
-            <a class="btn btn-link" asp-action="Login">Log in</a>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-tape" data-busy="Creating…">Continue</button>
+                <a class="btn btn-ghost" asp-action="Login">I already have an account</a>
+            </div>
         </form>
     </div>
-</div>
+</section>
 @section Scripts { <partial name="_ValidationScriptsPartial" /> }

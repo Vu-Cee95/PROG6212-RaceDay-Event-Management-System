@@ -4,49 +4,61 @@
     var totalEnrolments = Model.Sum(e => e.EnrolmentCount);
     var upcoming = Model.Count(e => e.EventDate.Date >= DateTime.Today);
 }
-<div class="page-wrap">
-    <h1 class="page-title">Desk</h1>
-    <p class="page-lead">Your events, fields and results. Nothing here talks to the database except through the API.</p>
-    <div class="stat-grid">
-        <div class="stat"><span>Events</span><strong>@Model.Count</strong></div>
-        <div class="stat"><span>Upcoming</span><strong>@upcoming</strong></div>
-        <div class="stat"><span>Enrolments</span><strong>@totalEnrolments</strong></div>
+<div class="notion-desk">
+    <header class="notion-desk__top">
+        <div>
+            <p class="notion-desk__eyebrow">Workspace</p>
+            <h1 class="page-title">Timing desk</h1>
+            <p class="page-lead">Events, fields and results in one quiet board. Counts update after you save through the API.</p>
+        </div>
+        <div class="desk-actions">
+            <a class="btn btn-tape" asp-action="CreateEvent">New event</a>
+            <a class="btn btn-ghost" asp-action="Events">All events</a>
+        </div>
+    </header>
+
+    <div class="notion-props" aria-label="Desk totals">
+        <div class="notion-prop"><span>Events</span><strong class="mono">@Model.Count</strong></div>
+        <div class="notion-prop"><span>Upcoming</span><strong class="mono">@upcoming</strong></div>
+        <div class="notion-prop"><span>Enrolments</span><strong class="mono">@totalEnrolments</strong></div>
     </div>
-    <p><a class="btn btn-tape" asp-action="CreateEvent">Create event</a></p>
+
     @if (Model.Count == 0)
     {
-        <p>You have not created an event yet. Start with Create event.</p>
+        <div class="empty-desk">
+            <p class="empty-desk__kicker">Field</p>
+            <h2>No events on the board</h2>
+            <p>Create an event, add at least one category, then wait for entries.</p>
+            <a class="btn btn-tape" asp-action="CreateEvent">Create event</a>
+        </div>
     }
     else
     {
-        <div class="sheet">
-            <table class="ops-table">
-                <thead>
-                    <tr>
-                        <th>Event</th>
-                        <th>Date</th>
-                        <th>Type</th>
-                        <th>Field</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td data-label="Event">@item.Name</td>
-                        <td data-label="Date" class="mono">@item.EventDate.ToString("dd MMM yyyy")</td>
-                        <td data-label="Type">@item.EventType</td>
-                        <td data-label="Field" class="mono">@item.EnrolmentCount</td>
-                        <td>
-                            <a asp-action="Categories" asp-route-eventId="@item.EventId">Categories</a>
-                            ·
-                            <a asp-action="Enrolments" asp-route-eventId="@item.EventId">Enrolments</a>
-                        </td>
-                    </tr>
-                }
-                </tbody>
-            </table>
+        <div class="notion-table" role="table" aria-label="Your events">
+            <div class="notion-table__head" role="row">
+                <span role="columnheader">Event</span>
+                <span role="columnheader">When</span>
+                <span role="columnheader">Field</span>
+                <span role="columnheader">Actions</span>
+            </div>
+            @foreach (var item in Model)
+            {
+                <article class="notion-table__row" role="row">
+                    <div class="notion-table__event" role="cell">
+                        <img src="@EventImages.Url(item)" alt="" width="72" height="48" />
+                        <div>
+                            <strong>@item.Name</strong>
+                            <span>@item.EventType · @item.Location · @item.Distance.ToString("0.#") km</span>
+                        </div>
+                    </div>
+                    <div role="cell" class="mono">@item.EventDate.ToString("dd MMM yyyy")</div>
+                    <div role="cell" class="mono">@item.EnrolmentCount</div>
+                    <div class="notion-table__actions" role="cell">
+                        <a class="btn btn-asphalt" asp-action="Categories" asp-route-eventId="@item.EventId">Categories</a>
+                        <a class="btn btn-ghost" asp-action="Enrolments" asp-route-eventId="@item.EventId">Enrolments</a>
+                    </div>
+                </article>
+            }
         </div>
     }
 </div>

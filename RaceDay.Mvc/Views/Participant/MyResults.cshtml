@@ -2,38 +2,45 @@
 @{
     ViewData["Title"] = "My results";
 }
+<div class="desk-mast">
+    <div class="desk-mast__copy">
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a asp-action="Index">Events</a>
+            <span aria-hidden="true">/</span>
+            <span class="crumbs__here">My results</span>
+        </nav>
+        <h1 class="page-title">Official times</h1>
+        <p class="page-lead">Chip time and position as captured by the organiser. Position reads as place of field.</p>
+    </div>
+    <figure class="desk-mast__shot">
+        <img src="~/img/cycle.jpg" alt="" width="1200" height="800" />
+        <figcaption class="desk-mast__stamp" aria-hidden="true">GUN</figcaption>
+    </figure>
+</div>
 <div class="page-wrap">
-    <h1 class="page-title">My results</h1>
     @if (Model.Count == 0)
     {
-        <p>No official times yet. They appear here after an organiser captures your result.</p>
+        <div class="empty-desk">
+            <p class="empty-desk__kicker">Times</p>
+            <h2>No official times yet</h2>
+            <p>They appear here after an organiser captures your result.</p>
+            <a class="btn btn-ghost" asp-action="MyEvents">My events</a>
+        </div>
     }
     else
     {
-        <div class="sheet">
-            <table class="ops-table">
-                <thead>
-                    <tr>
-                        <th>Event</th>
-                        <th>Date</th>
-                        <th>Category</th>
-                        <th>Time</th>
-                        <th>Position</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td data-label="Event">@item.EventName</td>
-                        <td data-label="Date" class="mono">@item.EventDate.ToString("dd MMM yyyy")</td>
-                        <td data-label="Category">@item.CategoryName</td>
-                        <td data-label="Time" class="mono">@(item.FinishTime?.ToString(@"hh\:mm\:ss") ?? "-")</td>
-                        <td data-label="Position" class="mono">@PositionText.Format(item.FinishingPosition, item.TotalFinishers)</td>
-                    </tr>
-                }
-                </tbody>
-            </table>
+        <div class="ticket-list">
+            @foreach (var item in Model)
+            {
+                <article class="ticket ticket--result">
+                    <div class="ticket__time">@(item.FinishTime?.ToString(@"hh\:mm\:ss") ?? "—")</div>
+                    <div>
+                        <h2>@item.EventName</h2>
+                        <p class="start-meta mb-0">@item.CategoryName · <span class="mono">@item.EventDate.ToString("dd MMM yyyy")</span></p>
+                    </div>
+                    <div class="ticket__pos">@PositionText.Format(item.FinishingPosition, item.TotalFinishers)</div>
+                </article>
+            }
         </div>
     }
 </div>

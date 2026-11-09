@@ -5,17 +5,19 @@
     var search = ViewBag.Search as string;
     var types = (string[])ViewBag.Types;
 }
-<div class="page-wrap">
+<div class="page-wrap airbnb-browse">
     <h1 class="page-title">Events</h1>
-    <form method="get" class="row g-2 align-items-end mb-4">
-        <div class="col-md-4">
-            <label class="form-label" for="search">Search</label>
-            <input class="form-control" id="search" name="search" value="@search" placeholder="Name or location" />
+    <p class="page-lead">Search by name or place. Filter by discipline. Upcoming and past races both show.</p>
+
+    <form method="get" class="air-filter" role="search">
+        <div class="air-filter__pill">
+            <label for="search">Where / what</label>
+            <input id="search" name="search" value="@search" placeholder="Soweto, Cape Town, night…" />
         </div>
-        <div class="col-md-3">
-            <label class="form-label" for="type">Type</label>
-            <select class="form-select" id="type" name="type">
-                <option value="">All</option>
+        <div class="air-filter__pill">
+            <label for="type">Type</label>
+            <select id="type" name="type">
+                <option value="">Any</option>
                 @foreach (var t in types)
                 {
                     if (string.Equals(t, type, StringComparison.OrdinalIgnoreCase))
@@ -29,26 +31,49 @@
                 }
             </select>
         </div>
-        <div class="col-md-2">
-            <button class="btn btn-tape" type="submit">Filter</button>
-        </div>
+        <button class="btn btn-tape" type="submit">Search</button>
     </form>
+
+    @if (!string.IsNullOrWhiteSpace(search) || !string.IsNullOrWhiteSpace(type))
+    {
+        <div class="air-chips">
+            @if (!string.IsNullOrWhiteSpace(search))
+            {
+                <span class="air-chip">“@search”</span>
+            }
+            @if (!string.IsNullOrWhiteSpace(type))
+            {
+                <span class="air-chip">@type</span>
+            }
+            <a class="air-chip air-chip--clear" asp-action="Index">Clear</a>
+        </div>
+    }
+
     @if (Model.Count == 0)
     {
-        <p>No events match that filter.</p>
+        <div class="empty-desk">
+            <p class="empty-desk__kicker">Start list</p>
+            <h2>No events match</h2>
+            <p>Clear the search or pick Any to see every race.</p>
+            <a class="btn btn-ghost" asp-action="Index">Clear filters</a>
+        </div>
     }
     else
     {
-        <div class="start-list">
+        <div class="air-grid">
             @foreach (var item in Model)
             {
-                <article class="start-row">
-                    <div class="start-row__bib">@item.Distance.ToString("0.#")</div>
-                    <div>
+                <article class="air-card">
+                    <figure class="air-card__shot">
+                        <img src="@EventImages.Url(item)" alt="" width="1600" height="900" />
+                        <span class="air-card__badge">@item.EventType</span>
+                    </figure>
+                    <div class="air-card__body">
+                        <p class="air-card__meta"><span class="mono">@item.EventDate.ToString("dd MMM yyyy")</span> · @item.Distance.ToString("0.#") km · @(item.EventDate.Date >= DateTime.Today ? "Upcoming" : "Past")</p>
                         <h2>@item.Name</h2>
-                        <p class="start-meta mb-0">@item.EventType · @item.Location · <span class="mono">@item.EventDate.ToString("dd MMM yyyy")</span> · @(item.EventDate.Date >= DateTime.Today ? "Upcoming" : "Past")</p>
+                        <p>@item.Location</p>
+                        <a class="btn btn-asphalt" asp-action="Details" asp-route-id="@item.EventId">View details</a>
                     </div>
-                    <a class="btn btn-asphalt" asp-action="Details" asp-route-id="@item.EventId">Details</a>
                 </article>
             }
         </div>

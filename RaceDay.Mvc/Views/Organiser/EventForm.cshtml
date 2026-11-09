@@ -1,51 +1,88 @@
 @model EventFormVm
 @{
-    ViewData["Title"] = Model.EventId.HasValue ? "Edit event" : "Create event";
+    var editing = Model.EventId.HasValue;
+    ViewData["Title"] = editing ? "Edit event" : "Create event";
+    var minDate = editing ? null : DateTime.Today.ToString("yyyy-MM-dd");
 }
-<div class="page-wrap">
-    <h1 class="page-title">@ViewData["Title"]</h1>
-    <div class="sheet" style="max-width:40rem">
-        <form asp-action="@(Model.EventId.HasValue ? "EditEvent" : "CreateEvent")" asp-route-id="@Model.EventId" method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="mb-3">
-                <label asp-for="Name" class="form-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Description" class="form-label"></label>
-                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
-            </div>
-            <div class="mb-3">
-                <label asp-for="EventDate" class="form-label"></label>
-                <input asp-for="EventDate" class="form-control" type="date" />
-                <span asp-validation-for="EventDate" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Location" class="form-label"></label>
-                <input asp-for="Location" class="form-control" />
-                <span asp-validation-for="Location" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Distance" class="form-label"></label>
-                <input asp-for="Distance" class="form-control" />
-                <span asp-validation-for="Distance" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="EventTypeId" class="form-label"></label>
-                <select asp-for="EventTypeId" asp-items="Model.EventTypes" class="form-select"></select>
-            </div>
-            @if (!string.IsNullOrWhiteSpace(Model.BannerImageUrl))
-            {
-                <p><img src="@Model.BannerImageUrl" alt="Current banner" class="img-fluid" style="max-height:180px" /></p>
-            }
-            <div class="mb-3">
-                <label asp-for="Banner" class="form-label">Event banner</label>
-                <input asp-for="Banner" class="form-control" type="file" accept="image/jpeg,image/png,image/webp,image/gif" />
-            </div>
-            <button type="submit" class="btn btn-tape">Save</button>
-            <a class="btn btn-link" asp-action="Events">Cancel</a>
-        </form>
+<div class="desk-mast">
+    <div class="desk-mast__copy">
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a asp-action="Index">Desk</a>
+            <span aria-hidden="true">/</span>
+            <a asp-action="Events">Events</a>
+            <span aria-hidden="true">/</span>
+            <span class="crumbs__here">@(editing ? "Edit" : "Create")</span>
+        </nav>
+        <h1 class="page-title">@(editing ? "Edit event" : "Create event")</h1>
+        <p class="page-lead">@(editing ? "Changes write through the API. Banner is optional JPEG, PNG, WebP or GIF, max 5 MB." : "Name, date, location and distance are required. Add categories after you save.")</p>
     </div>
+    <figure class="desk-mast__shot">
+        <img src="~/img/cycle.jpg" alt="" width="1200" height="800" />
+        <figcaption class="desk-mast__stamp" aria-hidden="true">NEW</figcaption>
+    </figure>
+</div>
+<div class="page-wrap">
+    <div class="desk-form desk-form--wide">
+        <div class="desk-form__head">
+            <strong>@(editing ? "Event sheet" : "New race")</strong>
+            <span>@(editing ? "EDIT" : "CREATE")</span>
+        </div>
+        <div class="desk-form__body">
+            <form asp-action="@(editing ? "EditEvent" : "CreateEvent")" asp-route-id="@Model.EventId" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="alert alert-rd-bad"></div>
+                <div class="field">
+                    <label asp-for="Name">Name <span class="req" aria-hidden="true">*</span></label>
+                    <input asp-for="Name" class="form-control" required maxlength="100" />
+                    <span asp-validation-for="Name" class="field-error"></span>
+                </div>
+                <div class="field">
+                    <label asp-for="Description"></label>
+                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                    <span class="hint">Shown on the participant details page.</span>
+                </div>
+                <div class="desk-form__grid">
+                    <div class="field">
+                        <label asp-for="EventDate">Event date <span class="req" aria-hidden="true">*</span></label>
+                        <input asp-for="EventDate" class="form-control" type="date" min="@minDate" required />
+                        <span asp-validation-for="EventDate" class="field-error"></span>
+                    </div>
+                    <div class="field">
+                        <label asp-for="Location">Location <span class="req" aria-hidden="true">*</span></label>
+                        <input asp-for="Location" class="form-control" required maxlength="200" />
+                        <span asp-validation-for="Location" class="field-error"></span>
+                    </div>
+                    <div class="field">
+                        <label asp-for="Distance">Distance (km) <span class="req" aria-hidden="true">*</span></label>
+                        <input asp-for="Distance" class="form-control" />
+                        <span class="hint">Use kilometres, for example 10 or 21.1.</span>
+                        <span asp-validation-for="Distance" class="field-error"></span>
+                    </div>
+                    <div class="field">
+                        <label asp-for="EventTypeId"></label>
+                        <select asp-for="EventTypeId" asp-items="Model.EventTypes" class="form-select"></select>
+                    </div>
+                </div>
+                <div class="field">
+                    <label asp-for="Banner">Event banner</label>
+                    <div class="file-well">
+                        @if (!string.IsNullOrWhiteSpace(Model.BannerImageUrl))
+                        {
+                            <img src="@Model.BannerImageUrl" alt="Current banner" />
+                        }
+                        <input asp-for="Banner" class="form-control" type="file" accept="image/jpeg,image/png,image/webp,image/gif" />
+                        <span class="hint">JPEG, PNG, WebP or GIF. Maximum 5 MB. Leave empty to keep the current banner.</span>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-tape" data-busy="Saving…">@(editing ? "Save event" : "Create event")</button>
+                    <a class="btn btn-ghost" asp-action="Events">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <details class="help-fold">
+        <summary>What happens after save</summary>
+        <p>The event is stored by the API. Add at least one category before participants can enter. A missing banner uses the Run, Walk or Cycle photo for that type.</p>
+    </details>
 </div>
 @section Scripts { <partial name="_ValidationScriptsPartial" /> }

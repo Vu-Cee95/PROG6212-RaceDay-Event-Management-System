@@ -2,30 +2,54 @@
 @{
     ViewData["Title"] = "Events";
 }
+<div class="desk-mast">
+    <div class="desk-mast__copy">
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a asp-action="Index">Desk</a>
+            <span aria-hidden="true">/</span>
+            <span class="crumbs__here">Events</span>
+        </nav>
+        <h1 class="page-title">Your races</h1>
+        <p class="page-lead">Edit details, add categories, or delete a race that has not started.</p>
+        <div class="desk-actions">
+            <a class="btn btn-tape" asp-action="CreateEvent">Create event</a>
+        </div>
+    </div>
+    <figure class="desk-mast__shot">
+        <img src="~/img/peloton.jpg" alt="" width="1200" height="800" />
+        <figcaption class="desk-mast__stamp" aria-hidden="true">KM</figcaption>
+    </figure>
+</div>
 <div class="page-wrap">
-    <h1 class="page-title">Events</h1>
-    <p><a class="btn btn-tape" asp-action="CreateEvent">Create event</a></p>
     @if (Model.Count == 0)
     {
-        <p>No events yet.</p>
+        <div class="empty-desk">
+            <p class="empty-desk__kicker">Board</p>
+            <h2>No events yet</h2>
+            <p>Start with a name, date, location and distance. Categories come next.</p>
+            <a class="btn btn-tape" asp-action="CreateEvent">Create event</a>
+        </div>
     }
     else
     {
         <div class="start-list">
             @foreach (var item in Model)
             {
-                <article class="start-row">
+                <article class="start-row start-row--desk">
+                    <figure class="start-row__shot zoom-frame">
+                        <img src="@EventImages.Url(item)" alt="" width="400" height="240" />
+                    </figure>
                     <div class="start-row__bib">@item.Distance.ToString("0.#")</div>
                     <div>
                         <h2>@item.Name</h2>
-                        <p class="start-meta mb-0">@item.EventType · @item.Location · <span class="mono">@item.EventDate.ToString("dd MMM yyyy")</span> · @item.EnrolmentCount enrolled</p>
+                        <p class="start-meta mb-0">@item.EventType · @item.Location · <span class="mono">@item.EventDate.ToString("dd MMM yyyy")</span> · @item.EnrolmentCount enrolled · @item.CategoryCount categories</p>
                     </div>
                     <div class="d-flex flex-wrap gap-2">
                         <a class="btn btn-asphalt" asp-action="EditEvent" asp-route-id="@item.EventId">Edit</a>
-                        <a class="btn btn-asphalt" asp-action="Categories" asp-route-eventId="@item.EventId">Categories</a>
-                        <form asp-action="DeleteEvent" asp-route-id="@item.EventId" method="post" onsubmit="return confirm('Delete this event?');">
+                        <a class="btn btn-ghost" asp-action="Categories" asp-route-eventId="@item.EventId">Categories</a>
+                        <form asp-action="DeleteEvent" asp-route-id="@item.EventId" method="post" data-confirm="Delete @item.Name? Categories and enrolments go with it.">
                             @Html.AntiForgeryToken()
-                            <button type="submit" class="btn btn-outline-danger">Delete</button>
+                            <button type="submit" class="btn btn-danger" data-busy="Deleting…">Delete</button>
                         </form>
                     </div>
                 </article>

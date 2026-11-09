@@ -1,8 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Error";
 }
-<div class="page-wrap">
-    <h1 class="page-title">Something went wrong</h1>
-    <p class="page-lead">The page could not be loaded. Try again, or go back to the start list.</p>
-    <a class="btn btn-tape" asp-controller="Home" asp-action="Index">Home</a>
-</div>
+<section class="block-page">
+    <div class="block-page__mark" aria-hidden="true">ERR</div>
+    <div class="block-page__copy">
+        <h1 class="page-title">Something went wrong</h1>
+        <p class="page-lead">The page could not be loaded. Try again, or go back to the start list.</p>
+        <div class="desk-actions">
+            <a class="btn btn-tape" asp-controller="Home" asp-action="Index">Home</a>
+        </div>
+    </div>
+</section>

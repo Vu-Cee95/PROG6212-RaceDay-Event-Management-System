@@ -2,38 +2,182 @@
 @{
     ViewData["Title"] = "RaceDay";
     ViewData["OverHero"] = true;
+    var upcoming = Model.Where(e => e.EventDate.Date >= DateTime.Today).OrderBy(e => e.EventDate).ToList();
+    var next = upcoming.FirstOrDefault();
+    var countdownTarget = next?.EventDate ?? DateTime.Today.AddMonths(2);
+    var openCount = upcoming.Count;
+    var runCount = Model.Count(e => e.EventType?.Contains("Run", StringComparison.OrdinalIgnoreCase) == true);
+    var walkCount = Model.Count(e => e.EventType?.Contains("Walk", StringComparison.OrdinalIgnoreCase) == true);
+    var cycleCount = Model.Count(e => e.EventType?.Contains("Cycle", StringComparison.OrdinalIgnoreCase) == true);
+    var news = upcoming.Take(3).ToList();
 }
-<section class="plx" aria-label="RaceDay start">
-    <img class="plx__layer" style="--depth:-0.25" src="~/img/hero-start.jpg" alt="" width="1600" height="900" />
-    <div class="plx__layer plx__mist" style="--depth:0.1" aria-hidden="true"></div>
-    <div class="plx__copy plx__layer" style="--depth:0.22">
-        <h1>Race operations, not a brochure.</h1>
-        <p>Enter a road race, walk or cycle. Organisers run the desk: fields, categories, enrolments and official times.</p>
-        <a class="btn btn-tape" asp-controller="Auth" asp-action="Register">Register</a>
-        <a class="btn btn-asphalt ms-2" asp-controller="Auth" asp-action="Login">Log in</a>
+<section class="cm-hero" aria-label="RaceDay">
+    <div class="cm-hero__media" aria-hidden="true">
+        <img src="~/img/night-pack.jpg" alt="" width="2400" height="1350" />
+        <div class="cm-hero__veil"></div>
+    </div>
+    <div class="cm-hero__center">
+        <div class="cm-badge" aria-hidden="true">
+            <span class="cm-badge__ring">RaceDay</span>
+            <span class="cm-badge__sub">Event Desk</span>
+        </div>
+        <h1 class="cm-hero__title">The race starts here</h1>
+        <p class="cm-hero__date">@(next != null ? next.EventDate.ToString("dddd dd MMMM yyyy").ToUpperInvariant() : "NEXT START LIST OPEN")</p>
+        <div class="cm-hero__actions">
+            <a class="btn btn-cm" asp-controller="Auth" asp-action="Register">Register</a>
+            <a class="btn btn-cm-ghost" href="#start-list">Start list</a>
+        </div>
+    </div>
+    <div class="cm-countdown" data-countdown="@countdownTarget.ToString("o")" aria-label="Time until next event">
+        <p class="cm-countdown__label">Time until event</p>
+        <div class="cm-countdown__grid">
+            <div><span data-unit="days">00</span><small>Days</small></div>
+            <div><span data-unit="hours">00</span><small>Hours</small></div>
+            <div><span data-unit="mins">00</span><small>Minutes</small></div>
+            <div><span data-unit="secs">00</span><small>Seconds</small></div>
+        </div>
+    </div>
+    <a class="cm-scroll" href="#cm-ask" aria-label="Scroll down">↓</a>
+</section>
+
+<section class="cm-ask" id="cm-ask" aria-label="Find an event">
+    <div class="cm-ask__inner">
+        <div class="cm-ask__copy">
+            <h2>Looking for something specific, or have a question?</h2>
+            <form class="cm-ask__form" method="get" asp-controller="Auth" asp-action="Login">
+                <label class="visually-hidden" for="cm-ask-q">Search RaceDay</label>
+                <input id="cm-ask-q" type="search" name="q" placeholder="How do I enter an open race on RaceDay?" />
+                <button type="submit" class="cm-ask__go" aria-label="Continue to log in">↑</button>
+            </form>
+        </div>
+        <aside class="cm-ask__card">
+            <p>RaceDay is the desk for South African race weekends. Participants enter a category. Organisers confirm the field, capture times, and keep results private to each athlete.</p>
+            <p class="cm-ask__meta">Log in to enter an event or open the organiser desk.</p>
+        </aside>
     </div>
 </section>
-<div class="page-wrap">
-    <h2 class="page-title">Start list</h2>
-    <p class="page-lead">Log in as a participant to enter. Organisers manage their own events after login.</p>
-    @if (Model.Count == 0)
+
+<section class="cm-news" aria-label="Latest from the field">
+    <div class="cm-news__head">
+        <h2>Latest from the field</h2>
+        <a class="btn btn-cm" href="#start-list">View all events ↑</a>
+    </div>
+    <div class="cm-news__grid">
+        @if (news.Count == 0)
+        {
+            <article class="cm-news__feature">
+                <img src="~/img/finish-tape.jpg" alt="" width="1600" height="1000" />
+                <div class="cm-news__body">
+                    <p class="cm-news__date">@DateTime.Today.ToString("dd MMM yyyy")</p>
+                    <h3>No upcoming events yet</h3>
+                    <p>Check back once an organiser publishes a race, or register to open the desk.</p>
+                </div>
+            </article>
+        }
+        else
+        {
+            var feature = news[0];
+            <article class="cm-news__feature">
+                <a asp-controller="Auth" asp-action="Login">
+                    <img src="@EventImages.Url(feature)" alt="" width="1600" height="1000" />
+                    <div class="cm-news__body">
+                        <p class="cm-news__date">@feature.EventDate.ToString("dd MMM yyyy")</p>
+                        <h3>@feature.Name</h3>
+                        <p>@feature.Location · @feature.EventType · @feature.Distance.ToString("0.#") km</p>
+                    </div>
+                </a>
+            </article>
+            <div class="cm-news__side">
+                @foreach (var item in news.Skip(1))
+                {
+                    <a class="cm-news__item" asp-controller="Auth" asp-action="Login">
+                        <p class="cm-news__date">@item.EventDate.ToString("dd MMM yyyy")</p>
+                        <h3>@item.Name</h3>
+                        <p>@item.Location</p>
+                    </a>
+                }
+            </div>
+        }
+    </div>
+</section>
+
+<section class="cm-charity" aria-label="RaceDay field stats">
+    <div class="cm-charity__media" aria-hidden="true">
+        <img src="~/img/hero-pack.jpg" alt="" width="2400" height="1350" />
+        <div class="cm-charity__veil"></div>
+    </div>
+    <div class="cm-charity__inner">
+        <div class="cm-charity__copy">
+            <p class="cm-charity__kicker">RaceDay</p>
+            <h2>On the start list</h2>
+            <p class="cm-charity__total">@Model.Count.ToString("N0")</p>
+            <p class="cm-charity__sub">Published events across the desk</p>
+        </div>
+        <div class="cm-charity__grid" role="list">
+            <div role="listitem"><span>@openCount</span><small>Upcoming</small></div>
+            <div role="listitem"><span>@Model.Sum(e => e.EnrolmentCount)</span><small>Enrolments</small></div>
+            <div role="listitem"><span>@runCount</span><small>Run</small></div>
+            <div role="listitem"><span>@walkCount</span><small>Walk</small></div>
+            <div role="listitem"><span>@cycleCount</span><small>Cycle</small></div>
+            <div role="listitem"><span>@Model.Count</span><small>Total</small></div>
+        </div>
+    </div>
+</section>
+
+<section class="cm-stats" aria-label="Disciplines">
+    <div class="cm-stats__inner">
+        <p class="cm-stats__eyebrow">Looking at the numbers</p>
+        <h2>RaceDay disciplines</h2>
+        <div class="cm-stats__cards">
+            <article>
+                <img src="~/img/run.jpg" alt="" width="800" height="600" />
+                <h3>Run</h3>
+                <p>Road fields with a gun and a chip.</p>
+            </article>
+            <article>
+                <img src="~/img/walk.jpg" alt="" width="800" height="600" />
+                <h3>Walk</h3>
+                <p>Park loops. Same desk, calmer start.</p>
+            </article>
+            <article>
+                <img src="~/img/peloton.jpg" alt="" width="800" height="600" />
+                <h3>Cycle</h3>
+                <p>Closed-road tours and climbs.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="cm-events page-wrap" id="start-list">
+    <div class="cm-events__head">
+        <h2 class="page-title">Upcoming events</h2>
+        <p class="page-lead">Log in as a participant to enter. Organisers manage their own events after login.</p>
+    </div>
+    @if (upcoming.Count == 0)
     {
-        <p>No upcoming events are listed yet.</p>
+        <div class="empty-desk">
+            <p class="empty-desk__kicker">Field</p>
+            <h2>No upcoming events</h2>
+            <p>Check back once an organiser publishes a race.</p>
+        </div>
     }
     else
     {
-        <div class="start-list">
-            @foreach (var item in Model)
+        <div class="cm-events__list">
+            @foreach (var item in upcoming.Take(6))
             {
-                <article class="start-row">
-                    <div class="start-row__bib">@item.Distance.ToString("0.#")</div>
+                <article class="cm-event">
+                    <figure>
+                        <img src="@EventImages.Url(item)" alt="" width="1600" height="900" />
+                    </figure>
                     <div>
-                        <h2>@item.Name</h2>
-                        <p class="start-meta mb-0">@item.EventType · @item.Location · <span class="mono">@item.EventDate.ToString("dd MMM yyyy")</span> · @(item.EventDate.Date >= DateTime.Today ? "Upcoming" : "Past")</p>
+                        <p class="cm-news__date">@item.EventDate.ToString("dd MMM yyyy") · @item.EventType · @item.Distance.ToString("0.#") km</p>
+                        <h3>@item.Name</h3>
+                        <p>@item.Location</p>
+                        <a class="btn btn-cm" asp-controller="Auth" asp-action="Login">Log in to enter</a>
                     </div>
-                    <a class="btn btn-asphalt" asp-controller="Auth" asp-action="Login">Log in to enter</a>
                 </article>
             }
         </div>
     }
-</div>
+</section>

@@ -4,8 +4,14 @@
     var categories = (List<CategoryDto>)ViewBag.Categories;
 }
 <div class="page-wrap">
-    <figure class="zoom-frame mb-3">
+    <nav class="crumbs" aria-label="Breadcrumb">
+        <a asp-action="Index">Events</a>
+        <span aria-hidden="true">/</span>
+        <span class="crumbs__here">@Model.Name</span>
+    </nav>
+    <figure class="zoom-frame zoom-frame--hero mb-3">
         <img src="@EventImages.Url(Model)" alt="@Model.Name banner" width="1600" height="900" />
+        <figcaption class="zoom-frame__stamp" aria-hidden="true">@Model.EventType</figcaption>
     </figure>
     <h1 class="page-title">@Model.Name</h1>
     <p class="page-lead">@Model.EventType · @Model.Location · <span class="mono">@Model.EventDate.ToString("dd MMM yyyy")</span> · @Model.Distance.ToString("0.##") km</p>
@@ -13,28 +19,50 @@
     {
         <p>@Model.Description</p>
     }
-    <div class="sheet" style="max-width:32rem">
-        <h2 class="h4">Enter event</h2>
-        @if (categories.Count == 0)
-        {
-            <p>This event has no categories yet, so it cannot be entered.</p>
-        }
-        else
-        {
-            <form asp-action="EnterEvent" method="post">
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="eventId" value="@Model.EventId" />
-                <div class="mb-3">
-                    <label class="form-label" for="categoryId">Category</label>
-                    <select class="form-select" id="categoryId" name="categoryId">
-                        @foreach (var category in categories)
-                        {
-                            <option value="@category.CategoryId">@category.CategoryName</option>
-                        }
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-tape">Enter event</button>
-            </form>
-        }
+    <div class="desk-form mt-4">
+        <div class="desk-form__head">
+            <strong>Enter event</strong>
+            <span>@Model.Distance.ToString("0.#") KM</span>
+        </div>
+        <div class="desk-form__body">
+            @if (categories.Count == 0)
+            {
+                <p class="mb-0">This event has no categories yet, so it cannot be entered. Wait for the organiser to add one.</p>
+            }
+            else
+            {
+                <form asp-action="EnterEvent" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="eventId" value="@Model.EventId" />
+                    <fieldset class="field">
+                        <legend class="form-label">Category <span class="req" aria-hidden="true">*</span></legend>
+                        <div class="cat-picks">
+                            @for (var i = 0; i < categories.Count; i++)
+                            {
+                                var category = categories[i];
+                                <label class="cat-pick">
+                                    @if (i == 0)
+                                    {
+                                        <input type="radio" name="categoryId" value="@category.CategoryId" required checked />
+                                    }
+                                    else
+                                    {
+                                        <input type="radio" name="categoryId" value="@category.CategoryId" required />
+                                    }
+                                    <span>
+                                        <strong>@category.CategoryName</strong>
+                                        <span>@(string.IsNullOrWhiteSpace(category.Description) ? "Open to this category." : category.Description)</span>
+                                    </span>
+                                </label>
+                            }
+                        </div>
+                    </fieldset>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-tape" data-busy="Entering…">Enter event</button>
+                        <a class="btn btn-ghost" asp-action="Index">Cancel</a>
+                    </div>
+                </form>
+            }
+        </div>
     </div>
 </div>

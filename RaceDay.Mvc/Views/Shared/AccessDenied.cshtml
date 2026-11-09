@@ -1,8 +1,13 @@
 @{
     ViewData["Title"] = "Access denied";
 }
-<div class="page-wrap">
-    <h1 class="page-title">Wrong desk</h1>
-    <p class="page-lead">That page belongs to a different role. Use the menu for your account, or log out and log in as the other role.</p>
-    <a class="btn btn-tape" asp-controller="Home" asp-action="Index">Go to your home</a>
-</div>
+<section class="block-page">
+    <div class="block-page__mark" aria-hidden="true">NO</div>
+    <div class="block-page__copy">
+        <h1 class="page-title">Wrong desk</h1>
+        <p class="page-lead">That page belongs to a different role. Use the menu for your account, or log out and log in as the other role.</p>
+        <div class="desk-actions">
+            <a class="btn btn-tape" asp-controller="Home" asp-action="Index">Go to your home</a>
+        </div>
+    </div>
+</section>

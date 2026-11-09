@@ -2,36 +2,48 @@
 @{
     ViewData["Title"] = "My events";
 }
+<div class="desk-mast">
+    <div class="desk-mast__copy">
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a asp-action="Index">Events</a>
+            <span aria-hidden="true">/</span>
+            <span class="crumbs__here">My events</span>
+        </nav>
+        <h1 class="page-title">Your entries</h1>
+        <p class="page-lead">Each ticket is one enrolment. Pending waits for the organiser. Confirmed is on the start list.</p>
+    </div>
+    <figure class="desk-mast__shot">
+        <img src="~/img/night-pack.jpg" alt="" width="1200" height="800" />
+        <figcaption class="desk-mast__stamp" aria-hidden="true">BIB</figcaption>
+    </figure>
+</div>
 <div class="page-wrap">
-    <h1 class="page-title">My events</h1>
     @if (Model.Count == 0)
     {
-        <p>You have not entered an event yet. Open Events and choose a category.</p>
+        <div class="empty-desk">
+            <p class="empty-desk__kicker">Entries</p>
+            <h2>You have not entered an event yet</h2>
+            <p>Open Events, pick a race, then choose a category.</p>
+            <a class="btn btn-tape" asp-action="Index">Browse events</a>
+        </div>
     }
     else
     {
-        <div class="sheet">
-            <table class="ops-table">
-                <thead>
-                    <tr>
-                        <th>Event</th>
-                        <th>Date</th>
-                        <th>Category</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td data-label="Event">@item.EventName</td>
-                        <td data-label="Date" class="mono">@item.EventDate.ToString("dd MMM yyyy")</td>
-                        <td data-label="Category">@item.CategoryName</td>
-                        <td data-label="Status"><partial name="_StatusChip" model="item.Status" /></td>
-                    </tr>
-                }
-                </tbody>
-            </table>
+        <div class="ticket-list">
+            @foreach (var item in Model)
+            {
+                <article class="ticket">
+                    <div class="ticket__stub">
+                        <small>Day</small>
+                        <strong>@item.EventDate.ToString("dd")</strong>
+                    </div>
+                    <div>
+                        <h2>@item.EventName</h2>
+                        <p class="start-meta mb-0">@item.CategoryName · <span class="mono">@item.EventDate.ToString("dd MMM yyyy")</span></p>
+                    </div>
+                    <partial name="_StatusChip" model="item.Status" />
+                </article>
+            }
         </div>
     }
 </div>

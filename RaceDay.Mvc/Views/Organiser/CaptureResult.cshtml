@@ -2,35 +2,61 @@
 @{
     ViewData["Title"] = "Capture result";
 }
+<div class="desk-mast">
+    <div class="desk-mast__copy">
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a asp-action="Index">Desk</a>
+            <span aria-hidden="true">/</span>
+            <a asp-action="Results" asp-route-eventId="@Model.EventId">Results</a>
+            <span aria-hidden="true">/</span>
+            <span class="crumbs__here">Capture</span>
+        </nav>
+        <h1 class="page-title">@Model.ParticipantName</h1>
+        <p class="page-lead">@Model.EventName · @Model.CategoryName · chip time as hh:mm:ss</p>
+    </div>
+    <figure class="desk-mast__shot">
+        <img src="~/img/hero-start.jpg" alt="" width="1600" height="900" />
+        <figcaption class="desk-mast__stamp" aria-hidden="true">TIME</figcaption>
+    </figure>
+</div>
 <div class="page-wrap">
-    <h1 class="page-title">Capture result</h1>
-    <p class="page-lead">@Model.ParticipantName · @Model.EventName · @Model.CategoryName</p>
-    <div class="sheet" style="max-width:28rem">
-        <form asp-action="CaptureResult" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="EnrolmentId" />
-            <input type="hidden" asp-for="EventId" />
-            <input type="hidden" asp-for="ParticipantName" />
-            <input type="hidden" asp-for="EventName" />
-            <input type="hidden" asp-for="CategoryName" />
-            <div class="mb-3">
-                <label asp-for="FinishTime" class="form-label"></label>
-                <input asp-for="FinishTime" class="form-control" type="text" inputmode="numeric" placeholder="hh:mm:ss" />
-                <div class="form-text">Chip time as hours, minutes and seconds, for example 01:30:00.</div>
-                <span asp-validation-for="FinishTime" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="FinishingPosition" class="form-label"></label>
-                <input asp-for="FinishingPosition" class="form-control" />
-                <span asp-validation-for="FinishingPosition" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Notes" class="form-label"></label>
-                <input asp-for="Notes" class="form-control" />
-            </div>
-            <button type="submit" class="btn btn-tape">Save result</button>
-            <a class="btn btn-link" asp-action="Results" asp-route-eventId="@Model.EventId">Cancel</a>
-        </form>
+    <div class="desk-form">
+        <div class="desk-form__head">
+            <strong>Timing slip</strong>
+            <span>CHIP</span>
+        </div>
+        <div class="desk-form__body">
+            <form asp-action="CaptureResult" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-rd-bad"></div>
+                <input type="hidden" asp-for="EnrolmentId" />
+                <input type="hidden" asp-for="EventId" />
+                <input type="hidden" asp-for="ParticipantName" />
+                <input type="hidden" asp-for="EventName" />
+                <input type="hidden" asp-for="CategoryName" />
+                <div class="field">
+                    <label asp-for="FinishTime">Finish time <span class="req" aria-hidden="true">*</span></label>
+                    <input asp-for="FinishTime" asp-format="{0:hh\\:mm\\:ss}" class="form-control chip-input" type="text" inputmode="numeric" placeholder="hh:mm:ss" required />
+                    <span class="hint">Hours, minutes and seconds. Example 01:30:00. Not AM/PM.</span>
+                    <span asp-validation-for="FinishTime" class="field-error"></span>
+                </div>
+                <div class="desk-form__grid">
+                    <div class="field">
+                        <label asp-for="FinishingPosition">Finishing position <span class="req" aria-hidden="true">*</span></label>
+                        <input asp-for="FinishingPosition" class="form-control" min="1" required />
+                        <span class="hint">1 is first across the line.</span>
+                        <span asp-validation-for="FinishingPosition" class="field-error"></span>
+                    </div>
+                    <div class="field">
+                        <label asp-for="Notes"></label>
+                        <input asp-for="Notes" class="form-control" maxlength="255" />
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-tape" data-busy="Saving…">Save result</button>
+                    <a class="btn btn-ghost" asp-action="Results" asp-route-eventId="@Model.EventId">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 @section Scripts { <partial name="_ValidationScriptsPartial" /> }

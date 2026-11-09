@@ -3,6 +3,11 @@
     var userId = Context.Session.GetInt32(SessionKeys.UserId);
     var displayName = Context.Session.GetString(SessionKeys.DisplayName);
     var overHero = ViewData["OverHero"] as bool? == true;
+    var ctrl = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var act = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+    bool On(string c, params string[] actions) =>
+        string.Equals(ctrl, c, StringComparison.OrdinalIgnoreCase)
+        && (actions.Length == 0 || actions.Any(a => string.Equals(act, a, StringComparison.OrdinalIgnoreCase)));
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -12,48 +17,50 @@
     <title>@(ViewData["Title"] ?? "RaceDay")</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=IBM+Plex+Mono:wght@500&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body class="@(overHero ? "has-hero" : null)">
+<body class="@(overHero ? "has-hero cm-body" : "cm-body")">
     <a class="skip-link" href="#main">Skip to content</a>
-    <header class="ops-bar">
-        <nav class="navbar navbar-expand-lg ops-nav" aria-label="RaceDay">
-            <div class="container-fluid ops-nav__inner">
-                <a class="navbar-brand ops-brand" asp-controller="Home" asp-action="Index">RaceDay</a>
+    <div class="lane-progress" aria-hidden="true"></div>
+    <header class="ops-bar cm-bar">
+        <nav class="navbar navbar-expand-lg ops-nav cm-nav" aria-label="RaceDay">
+            <div class="container-fluid ops-nav__inner cm-nav__inner">
+                <a class="navbar-brand ops-brand cm-brand" asp-controller="Home" asp-action="Index">RaceDay</a>
                 <button class="navbar-toggler ops-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#opsNav" aria-controls="opsNav" aria-expanded="false" aria-label="Open menu">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="opsNav">
-                    <ul class="navbar-nav me-auto">
+                    <ul class="navbar-nav ms-auto cm-nav__links">
                         @if (userId is null)
                         {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Start list</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Auth" asp-action="Login">Log in</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Auth" asp-action="Register">Register</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index" aria-current="@(On("Home", "Index") ? "page" : null)">Events</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Auth" asp-action="Register" aria-current="@(On("Auth", "Register") ? "page" : null)">Register</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Auth" asp-action="Login" aria-current="@(On("Auth", "Login") ? "page" : null)">Login</a></li>
                         }
                         else if (string.Equals(role, "Organiser", StringComparison.OrdinalIgnoreCase))
                         {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Organiser" asp-action="Index">Desk</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Organiser" asp-action="Events">Events</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Organiser" asp-action="Enrolments">Enrolments</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Organiser" asp-action="Results">Results</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Organiser" asp-action="Index" aria-current="@(On("Organiser", "Index") ? "page" : null)">Desk</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Organiser" asp-action="Events" aria-current="@(On("Organiser", "Events", "CreateEvent", "EditEvent", "Categories") ? "page" : null)">Events</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Organiser" asp-action="Enrolments" aria-current="@(On("Organiser", "Enrolments", "UpdateEnrolmentStatus") ? "page" : null)">Enrolments</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Organiser" asp-action="Results" aria-current="@(On("Organiser", "Results", "CaptureResult") ? "page" : null)">Results</a></li>
                         }
                         else
                         {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="Index">Events</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="MyEvents">My events</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="MyResults">My results</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="Profile">Profile</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="Index" aria-current="@(On("Participant", "Index", "Details") ? "page" : null)">Events</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="MyEvents" aria-current="@(On("Participant", "MyEvents") ? "page" : null)">My events</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="MyResults" aria-current="@(On("Participant", "MyResults") ? "page" : null)">My results</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="Profile" aria-current="@(On("Participant", "Profile") ? "page" : null)">Profile</a></li>
                         }
                     </ul>
                     @if (userId is not null)
                     {
                         <form asp-controller="Auth" asp-action="Logout" method="post" class="ops-logout">
                             @Html.AntiForgeryToken()
+                            <span class="ops-role">@role</span>
                             <span class="ops-user">@displayName</span>
-                            <button type="submit" class="btn btn-sm btn-tape">Log out</button>
+                            <button type="submit" class="btn btn-sm btn-tape" data-busy="Logging out…">Log out</button>
                         </form>
                     }
                 </div>
@@ -61,16 +68,36 @@
         </nav>
     </header>
     <main id="main">
-        <div class="page-wrap alerts-host">
+        <div class="page-wrap alerts-host" aria-live="polite">
             <partial name="_Alerts" />
         </div>
         @RenderBody()
     </main>
-    <footer class="ops-foot">
-        <div class="container-fluid">RaceDay operations. MVC talks to the API. The API talks to SQL Server and Azure.</div>
+    <footer class="ops-foot cm-foot">
+        <div class="container-fluid ops-foot__inner cm-foot__inner">
+            <div>
+                <span class="ops-brand ops-brand--foot">RaceDay</span>
+                <p class="ops-foot__meta">Race events for participants and organisers.</p>
+            </div>
+            <div class="cm-foot__contact">
+                <p>Contact</p>
+                <p>Layout referenced from comrades.com · colours changed for RaceDay</p>
+            </div>
+        </div>
     </footer>
+    <dialog class="rd-dialog" id="rd-confirm" aria-labelledby="rd-confirm-title">
+        <form method="dialog" class="rd-dialog__body">
+            <h2 id="rd-confirm-title" class="page-title">Confirm</h2>
+            <p id="rd-confirm-text"></p>
+            <div class="form-actions">
+                <button value="cancel" class="btn btn-ghost">Cancel</button>
+                <button value="ok" class="btn btn-tape">Yes, continue</button>
+            </div>
+        </form>
+    </dialog>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/motion/motion.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

@@ -3,31 +3,65 @@
     ViewData["Title"] = "Categories";
     var eventDto = (EventDto)ViewBag.Event;
 }
+<div class="desk-mast">
+    <div class="desk-mast__copy">
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a asp-action="Index">Desk</a>
+            <span aria-hidden="true">/</span>
+            <a asp-action="Events">Events</a>
+            <span aria-hidden="true">/</span>
+            <span class="crumbs__here">Categories</span>
+        </nav>
+        <h1 class="page-title">@eventDto.Name</h1>
+        <p class="page-lead">Participants pick one of these when they enter. Add at least one before the field can grow.</p>
+        <div class="desk-actions">
+            <a class="btn btn-ghost" asp-action="Events">Back to events</a>
+            <a class="btn btn-ghost" asp-action="Enrolments" asp-route-eventId="@eventDto.EventId">Enrolments</a>
+        </div>
+    </div>
+    <figure class="desk-mast__shot">
+        <img src="@EventImages.Url(eventDto)" alt="" width="1200" height="800" />
+        <figcaption class="desk-mast__stamp" aria-hidden="true">CAT</figcaption>
+    </figure>
+</div>
 <div class="page-wrap">
-    <h1 class="page-title">Categories</h1>
-    <p class="page-lead">@eventDto.Name</p>
-    <div class="sheet mb-3" style="max-width:32rem">
-        <form asp-action="CreateCategory" method="post">
-            @Html.AntiForgeryToken()
-            <input type="hidden" name="EventId" value="@eventDto.EventId" />
-            <div class="mb-3">
-                <label class="form-label" for="CategoryName">Category name</label>
-                <input class="form-control" id="CategoryName" name="CategoryName" required maxlength="50" />
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="Description">Description</label>
-                <input class="form-control" id="Description" name="Description" maxlength="100" />
-            </div>
-            <button type="submit" class="btn btn-tape">Add category</button>
-        </form>
+    <div class="desk-form mb-4">
+        <div class="desk-form__head">
+            <strong>Add category</strong>
+            <span>REQUIRED</span>
+        </div>
+        <div class="desk-form__body">
+            <form asp-action="CreateCategory" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="EventId" value="@eventDto.EventId" />
+                <div class="desk-form__grid">
+                    <div class="field">
+                        <label class="form-label" for="CategoryName">Category name <span class="req" aria-hidden="true">*</span></label>
+                        <input class="form-control" id="CategoryName" name="CategoryName" required maxlength="50" />
+                        <span class="hint">For example Open, 40–49, or Wheelchair.</span>
+                    </div>
+                    <div class="field">
+                        <label class="form-label" for="Description">Description</label>
+                        <input class="form-control" id="Description" name="Description" maxlength="100" />
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-tape" data-busy="Adding…">Add category</button>
+                </div>
+            </form>
+        </div>
     </div>
     @if (Model.Count == 0)
     {
-        <p>No categories yet. Add at least one before participants can enter.</p>
+        <div class="empty-desk">
+            <p class="empty-desk__kicker">Categories</p>
+            <h2>None on this race yet</h2>
+            <p>Add at least one name above. Until then, the enter form on the public page stays closed.</p>
+        </div>
     }
     else
     {
-        <div class="sheet">
+        <div class="sheet sheet--desk">
             <table class="ops-table">
                 <thead><tr><th>Name</th><th>Description</th><th></th></tr></thead>
                 <tbody>
@@ -35,13 +69,13 @@
                 {
                     <tr>
                         <td data-label="Name">@item.CategoryName</td>
-                        <td data-label="Description">@item.Description</td>
+                        <td data-label="Description">@(string.IsNullOrWhiteSpace(item.Description) ? "—" : item.Description)</td>
                         <td>
-                            <form asp-action="DeleteCategory" method="post">
+                            <form asp-action="DeleteCategory" method="post" data-confirm="Delete category @item.CategoryName?">
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="categoryId" value="@item.CategoryId" />
                                 <input type="hidden" name="eventId" value="@eventDto.EventId" />
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                <button type="submit" class="btn btn-sm btn-danger" data-busy="Deleting…">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -50,4 +84,8 @@
             </table>
         </div>
     }
+    <details class="help-fold">
+        <summary>Why categories matter</summary>
+        <p>A participant must choose a category to enter. Delete only if nobody is using that category, or the API will reject the delete.</p>
+    </details>
 </div>

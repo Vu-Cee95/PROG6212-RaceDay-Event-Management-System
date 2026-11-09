@@ -3,39 +3,69 @@
     ViewData["Title"] = "Profile";
     var initials = string.Concat(Model.FullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(p => p[0]));
 }
+<div class="desk-mast">
+    <div class="desk-mast__copy">
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a asp-action="Index">Events</a>
+            <span aria-hidden="true">/</span>
+            <span class="crumbs__here">Profile</span>
+        </nav>
+        <h1 class="page-title">Your details</h1>
+        <p class="page-lead">Name and photo update through the API. Email and role stay as registered.</p>
+    </div>
+    <figure class="desk-mast__shot">
+        <img src="~/img/onboard-start.jpg" alt="" width="1200" height="800" />
+        <figcaption class="desk-mast__stamp" aria-hidden="true">ID</figcaption>
+    </figure>
+</div>
 <div class="page-wrap">
-    <h1 class="page-title">Profile</h1>
-    <div class="sheet" style="max-width:32rem">
-        @if (!string.IsNullOrWhiteSpace(Model.ProfilePictureUrl))
-        {
-            <img class="avatar mb-3" src="@Model.ProfilePictureUrl" alt="Profile picture of @Model.FullName" />
-        }
-        else
-        {
-            <div class="avatar mb-3" aria-hidden="true">@initials</div>
-        }
-        <form asp-action="Profile" method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ProfilePictureUrl" />
-            <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input class="form-control" value="@Model.Email" readonly />
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Role</label>
-                <input class="form-control" value="@Model.Role" readonly />
-            </div>
-            <div class="mb-3">
-                <label asp-for="FullName" class="form-label"></label>
-                <input asp-for="FullName" class="form-control" />
-                <span asp-validation-for="FullName" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Picture" class="form-label">Profile picture</label>
-                <input asp-for="Picture" class="form-control" type="file" accept="image/jpeg,image/png,image/webp,image/gif" />
-            </div>
-            <button type="submit" class="btn btn-tape">Save</button>
-        </form>
+    <div class="desk-form">
+        <div class="desk-form__head">
+            <strong>@Model.FullName</strong>
+            <span>@Model.Role.ToUpperInvariant()</span>
+        </div>
+        <div class="desk-form__body">
+            <form asp-action="Profile" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="alert alert-rd-bad"></div>
+                <input type="hidden" asp-for="ProfilePictureUrl" />
+                <div class="profile-split">
+                    @if (!string.IsNullOrWhiteSpace(Model.ProfilePictureUrl))
+                    {
+                        <img class="avatar" src="@Model.ProfilePictureUrl" alt="Profile picture of @Model.FullName" />
+                    }
+                    else
+                    {
+                        <div class="avatar" aria-hidden="true">@initials</div>
+                    }
+                    <div>
+                        <div class="field">
+                            <label class="form-label" for="profile-email">Email</label>
+                            <input id="profile-email" class="form-control" value="@Model.Email" readonly />
+                            <span class="hint">Cannot be changed here.</span>
+                        </div>
+                        <div class="field">
+                            <label class="form-label" for="profile-role">Role</label>
+                            <input id="profile-role" class="form-control" value="@Model.Role" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label asp-for="FullName">Full name <span class="req" aria-hidden="true">*</span></label>
+                    <input asp-for="FullName" class="form-control" required maxlength="100" />
+                    <span asp-validation-for="FullName" class="field-error"></span>
+                </div>
+                <div class="field">
+                    <label asp-for="Picture">Profile picture</label>
+                    <div class="file-well">
+                        <input asp-for="Picture" class="form-control" type="file" accept="image/jpeg,image/png,image/webp,image/gif" />
+                        <span class="hint">JPEG, PNG, WebP or GIF. Maximum 5 MB. Leave empty to keep the current photo.</span>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-tape" data-busy="Saving…">Save profile</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 @section Scripts { <partial name="_ValidationScriptsPartial" /> }
