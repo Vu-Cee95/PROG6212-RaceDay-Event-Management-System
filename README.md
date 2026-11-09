@@ -392,4 +392,4 @@ MVC session stores `UserId`, `Role`, `DisplayName` and the API's `.RaceDay.Sessi
 
 ### Part 3 Video Presentation
 
-YouTube (unlisted): _add Part 3 walkthrough link here after recording_
+YouTube (unlisted): https://youtu.be/XvkAQH1zqs4
