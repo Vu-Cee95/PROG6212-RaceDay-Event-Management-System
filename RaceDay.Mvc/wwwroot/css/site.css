@@ -1,4 +1,4 @@
-/* RaceDay UI — layout mirrored from comrades.com; colours swapped (gold → teal) */
+/* RaceDay UI — dark sporting theme, teal accent, Orbitron + Roboto */
 :root {
   --rd-void: #000000;
   --rd-asphalt: #0a0a0a;
@@ -82,7 +82,7 @@ h1, h2, h3, .ops-brand, .page-title, .stripe-hero__title, .desk-mast .page-title
   pointer-events: none;
 }
 
-/* Comrades-style floating dark chrome; accent colour swapped */
+/* Floating dark chrome over the hero */
 .ops-bar {
   position: sticky;
   top: 0;
@@ -204,7 +204,7 @@ h1, h2, h3, .ops-brand, .page-title, .stripe-hero__title, .desk-mast .page-title
   translate: 0 1px;
 }
 
-/* Primary CTA = RaceDay teal (Comrades used gold) */
+/* Primary CTA = RaceDay teal */
 .btn-tape {
   background: var(--rd-accent);
   color: #000;
@@ -2243,7 +2243,7 @@ h1, h2, h3, .ops-brand, .page-title, .stripe-hero__title, .desk-mast .page-title
   }
 }
 
-/* ===== Comrades Marathon layout mirror (comrades.com) — gold swapped to teal ===== */
+/* ===== Public landing: hero, countdown, news, field stats ===== */
 
 .cm-body {
   background: var(--rd-lane);
