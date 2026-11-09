@@ -1,7 +1,7 @@
 # RaceDay Event Management System
 
 **Module:** PROG6212 - Programming 2B | **Assessment:** Portfolio of Evidence (Parts 1-3)
-**Student:** VuCee95 | **Repository:** https://github.com/Vu-Cee95/PROG6212-RaceDay-Event-Management-System-Part1
+**Student:** VuCee95 | **Repository:** https://github.com/Vu-Cee95/PROG6212-RaceDay-Event-Management-System
 
 ## Project Description
 
@@ -16,11 +16,11 @@ The system is built progressively across three parts:
 |------|-------------|--------|
 | 1 | System planning: ERD, API endpoint plan, SQL database script | Complete - see [Part 1](#part-1---system-planning-and-database) |
 | 2 | RESTful API (ASP.NET Core Web API, EF Core Code-First, session auth, Swagger, unit tests, CI/CD) | Complete - see [Part 2](#part-2---restful-api-development) |
-| 3 | MVC web application, Azure Blob Storage, Docker | In progress - see [Part 3](#part-3---mvc-web-application) |
+| 3 | MVC web application, Azure Blob Storage, Docker | Complete - see [Part 3](#part-3---mvc-web-application) |
 
 ## User Roles
 
-The system supports two distinct roles. Role-based access is enforced on the API in Part 2 and will be
+The system supports two distinct roles. Role-based access is enforced on the API in Part 2 and is
 reflected in the MVC interface in Part 3.
 
 ### Organiser
@@ -379,3 +379,13 @@ Then open http://localhost:8080. Stop the Visual Studio MVC process first so you
 ### Authentication flow
 
 MVC session stores `UserId`, `Role`, `DisplayName` and the API's `.RaceDay.Session` cookie. Later API calls send that cookie. Logout calls the API then clears the MVC session.
+
+### GitHub Actions Screenshot (Part 3)
+
+`part3` push runs both workflows. Part 1 validates docs. Part 2 builds the full solution (API + MVC), runs tests, checks the Dockerfile, and smoke-tests the API.
+
+![Part 3 green build](docs/screenshots/part3-ci-green-build.png)
+
+### Part 3 Video Presentation
+
+YouTube (unlisted): _add Part 3 walkthrough link here after recording_
