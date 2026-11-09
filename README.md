@@ -72,7 +72,8 @@ RaceDay
 |   |-- dependabot.yml                   Weekly NuGet / monthly Actions update PRs
 |   `-- workflows/
 |       |-- part1-ci.yml                 Part 1 - validates the docs folder
-|       `-- part2-ci.yml                 Build API + MVC, test, validate structure, smoke-test against SQL Server
+|       |-- part2-ci.yml                 Build API + MVC, test, validate structure, smoke-test against SQL Server
+|       `-- part3-ci.yml                 Part 3 - assert 20+ commits since part2, build MVC
 `-- README.md
 ```
 
@@ -382,7 +383,10 @@ MVC session stores `UserId`, `Role`, `DisplayName` and the API's `.RaceDay.Sessi
 
 ### GitHub Actions Screenshot (Part 3)
 
-`part3` push runs both workflows. Part 1 validates docs. Part 2 builds the full solution (API + MVC), runs tests, checks the Dockerfile, and smoke-tests the API.
+`part3` push runs:
+- Part 1 docs check
+- Part 2 full solution build/test (includes MVC + Dockerfile)
+- **Part 3 commit check** (`.github/workflows/part3-ci.yml`) — counts commits since `part2` and fails if fewer than 20, then builds `RaceDay.Mvc`
 
 ![Part 3 green build](docs/screenshots/part3-ci-green-build.png)
 

@@ -1,0 +1,47 @@
+name: Part 3 - MVC and Commit Check
+
+# Proves the Part 3 PoE minimum: 20+ commits on part3 since part2,
+# plus a Release build of the MVC project that consumes the API.
+on:
+  push:
+    branches: ["part3", "main"]
+  pull_request:
+    branches: ["part3", "main"]
+
+jobs:
+  part3-commits-and-mvc:
+    name: Count Part 3 commits and build MVC
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify Part 3 has 20 or more commits since part2
+        run: |
+          set -e
+          git fetch origin part2:refs/remotes/origin/part2
+          COUNT=$(git rev-list --count origin/part2..HEAD)
+          echo "Part 3 commits since part2: $COUNT"
+          echo "----- commit list (part2..HEAD) -----"
+          git log --oneline origin/part2..HEAD
+          if [ "$COUNT" -lt 20 ]; then
+            echo "::error::Part 3 PoE needs at least 20 meaningful commits since part2. Found $COUNT."
+            exit 1
+          fi
+          echo "Part 3 commit minimum met ($COUNT >= 20)."
+
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore and build MVC
+        run: |
+          set -e
+          dotnet restore RaceDay.Mvc/RaceDay.Mvc.csproj
+          dotnet build RaceDay.Mvc/RaceDay.Mvc.csproj --configuration Release --no-restore
+          test -f RaceDay.Mvc/Dockerfile
+          echo "RaceDay.Mvc build OK."
