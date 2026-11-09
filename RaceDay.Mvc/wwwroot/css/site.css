@@ -2862,11 +2862,6 @@ body:not(.has-hero) .ops-nav__inner {
   color: #fff !important;
 }
 
-.cm-foot__contact p {
-  margin: 0;
-  font-size: 0.85rem;
-}
-
 @media (max-width: 900px) {
   .cm-ask__inner,
   .cm-news__grid,
